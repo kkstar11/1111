@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xianyu.dao.ItemMapper">
+
+    <resultMap id="ItemMap" type="com.xianyu.entity.Item">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="originalPrice" column="original_price"/>
+        <result property="category" column="category"/>
+        <result property="itemCondition" column="item_condition"/>
+        <result property="itemStatus" column="item_status"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="contactWay" column="contact_way"/>
+        <result property="itemLocation" column="item_location"/>
+        <result property="imageUrls" column="image_urls"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xianyu.entity.Item" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO item (title, description, price, original_price, category, item_condition, item_status, seller_id, contact_way, item_location, image_urls, view_count, like_count)
+        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{itemCondition}, #{itemStatus}, #{sellerId}, #{contactWay}, #{itemLocation}, #{imageUrls}, #{viewCount}, #{likeCount})
+    </insert>
+
+    <update id="update" parameterType="com.xianyu.entity.Item">
+        UPDATE item
+        SET title = #{title},
+            description = #{description},
+            price = #{price},
+            original_price = #{originalPrice},
+            category = #{category},
+            item_condition = #{itemCondition},
+            item_status = #{itemStatus},
+            contact_way = #{contactWay},
+            item_location = #{itemLocation},
+            image_urls = #{imageUrls},
+            view_count = #{viewCount},
+            like_count = #{likeCount},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM item WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="ItemMap">
+        SELECT * FROM item WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="ItemMap">
+        SELECT * FROM item ORDER BY create_time DESC
+    </select>
+
+    <select id="findBySeller" resultMap="ItemMap">
+        SELECT * FROM item WHERE seller_id = #{sellerId} ORDER BY create_time DESC
+    </select>
+
+    <select id="findByCategory" resultMap="ItemMap">
+        SELECT * FROM item WHERE category = #{category} ORDER BY create_time DESC
+    </select>
+</mapper>
+

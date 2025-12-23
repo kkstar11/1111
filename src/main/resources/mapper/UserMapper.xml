@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xianyu.dao.UserMapper">
+
+    <resultMap id="UserMap" type="com.xianyu.entity.User">
+        <id property="id" column="id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="realName" column="real_name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="college" column="college"/>
+        <result property="major" column="major"/>
+        <result property="grade" column="grade"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="userRole" column="user_role"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.xianyu.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student_user (student_id, username, password, real_name, phone, email, college, major, grade, avatar_url, user_status, user_role)
+        VALUES (#{studentId}, #{username}, #{password}, #{realName}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{avatarUrl}, #{userStatus}, #{userRole})
+    </insert>
+
+    <select id="findById" resultMap="UserMap">
+        SELECT * FROM student_user WHERE id = #{id}
+    </select>
+
+    <select id="findByUsername" resultMap="UserMap">
+        SELECT * FROM student_user WHERE username = #{username}
+    </select>
+
+    <select id="findByStudentId" resultMap="UserMap">
+        SELECT * FROM student_user WHERE student_id = #{studentId}
+    </select>
+
+    <select id="findAll" resultMap="UserMap">
+        SELECT * FROM student_user ORDER BY create_time DESC
+    </select>
+</mapper>
+

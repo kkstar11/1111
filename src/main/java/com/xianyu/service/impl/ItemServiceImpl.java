@@ -1,0 +1,100 @@
+package com.xianyu.service.impl;
+
+import com.xianyu.dao.ItemMapper;
+import com.xianyu.dto.ItemDTO;
+import com.xianyu.entity.Item;
+import com.xianyu.service.ItemService;
+import com.xianyu.vo.ItemVO;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ItemServiceImpl implements ItemService {
+
+    private final ItemMapper itemMapper;
+
+    public ItemServiceImpl(ItemMapper itemMapper) {
+        this.itemMapper = itemMapper;
+    }
+
+    @Override
+    public ItemVO create(ItemDTO dto, Long ownerId) {
+        validate(dto);
+        Item item = new Item();
+        item.setTitle(dto.getName());
+        item.setDescription(dto.getDescription());
+        item.setPrice(dto.getPrice());
+        item.setOriginalPrice(dto.getPrice());
+        item.setCategory("default");
+        item.setItemCondition(2);
+        item.setItemStatus(1);
+        item.setSellerId(ownerId);
+        item.setContactWay(null);
+        item.setItemLocation(null);
+        item.setImageUrls(null);
+        item.setViewCount(0);
+        item.setLikeCount(0);
+        itemMapper.insert(item);
+        return itemMapper.findById(item.getId()).map(this::toVO).orElseGet(() -> toVO(item));
+    }
+
+    @Override
+    public Optional<ItemVO> update(Long id, ItemDTO dto, Long ownerId) {
+        Item existing = itemMapper.findById(id).orElse(null);
+        if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
+            return Optional.empty();
+        }
+        validate(dto);
+        existing.setTitle(dto.getName());
+        existing.setDescription(dto.getDescription());
+        existing.setPrice(dto.getPrice());
+        itemMapper.update(existing);
+        return itemMapper.findById(id).map(this::toVO);
+    }
+
+    @Override
+    public boolean delete(Long id, Long ownerId) {
+        Item existing = itemMapper.findById(id).orElse(null);
+        if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
+            return false;
+        }
+        itemMapper.delete(id);
+        return true;
+    }
+
+    @Override
+    public Optional<ItemVO> findById(Long id) {
+        return itemMapper.findById(id).map(this::toVO);
+    }
+
+    @Override
+    public List<ItemVO> listAll() {
+        return itemMapper.findAll().stream().map(this::toVO).toList();
+    }
+
+    private void validate(ItemDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("item payload required");
+        }
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException("name required");
+        }
+        if (dto.getPrice() == null || dto.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("price must be >= 0");
+        }
+    }
+
+    private ItemVO toVO(Item item) {
+        ItemVO vo = new ItemVO();
+        vo.setId(item.getId());
+        vo.setName(item.getTitle());
+        vo.setDescription(item.getDescription());
+        vo.setPrice(item.getPrice());
+        vo.setOwnerId(item.getSellerId());
+        return vo;
+    }
+}
+

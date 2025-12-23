@@ -1,0 +1,61 @@
+package com.xianyu.controller;
+
+import com.xianyu.service.FavoriteService;
+import com.xianyu.util.Result;
+import com.xianyu.vo.FavoriteVO;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/favorites")
+public class FavoriteController {
+
+    private final FavoriteService favoriteService;
+
+    public FavoriteController(FavoriteService favoriteService) {
+        this.favoriteService = favoriteService;
+    }
+
+    @PostMapping
+    public Result<FavoriteVO> add(Long itemId, HttpSession session) {
+        Long userId = currentUserId(session);
+        if (userId == null) {
+            return Result.failure("unauthorized");
+        }
+        return Result.success(favoriteService.addFavorite(userId, itemId));
+    }
+
+    @DeleteMapping
+    public Result<Void> remove(Long itemId, HttpSession session) {
+        Long userId = currentUserId(session);
+        if (userId == null) {
+            return Result.failure("unauthorized");
+        }
+        boolean removed = favoriteService.removeFavorite(userId, itemId);
+        return removed ? Result.success(null) : Result.failure("favorite not found");
+    }
+
+    @GetMapping
+    public Result<List<FavoriteVO>> list(HttpSession session) {
+        Long userId = currentUserId(session);
+        if (userId == null) {
+            return Result.failure("unauthorized");
+        }
+        return Result.success(favoriteService.listByUser(userId));
+    }
+
+    private Long currentUserId(HttpSession session) {
+        Object u = session.getAttribute("currentUser");
+        if (u instanceof com.xianyu.vo.UserVO vo) {
+            return vo.getId();
+        }
+        return null;
+    }
+}
+
