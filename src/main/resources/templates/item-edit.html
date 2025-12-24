@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>发布/编辑商品 - 二手交易平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">二手交易平台</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/item-edit.html">发布商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/my-orders.html">我的订单</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user-center.html">个人中心</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h2 class="card-title mb-4" th:text="${item != null} ? '编辑商品' : '发布商品'">发布商品</h2>
+                        
+                        <div class="alert alert-danger" id="errorAlert" style="display: none;"></div>
+                        <div class="alert alert-success" id="successAlert" style="display: none;"></div>
+                        
+                        <form id="itemForm">
+                            <input type="hidden" id="itemId" th:value="${item?.id}" />
+                            
+                            <div class="mb-3">
+                                <label for="title" class="form-label">商品标题 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       th:value="${item?.title}"
+                                       placeholder="请输入商品标题" required maxlength="100" />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">商品分类 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">请选择分类</option>
+                                    <option value="电子产品" th:selected="${item?.category == '电子产品'}">电子产品</option>
+                                    <option value="图书教材" th:selected="${item?.category == '图书教材'}">图书教材</option>
+                                    <option value="生活用品" th:selected="${item?.category == '生活用品'}">生活用品</option>
+                                    <option value="服装鞋帽" th:selected="${item?.category == '服装鞋帽'}">服装鞋帽</option>
+                                    <option value="运动器材" th:selected="${item?.category == '运动器材'}">运动器材</option>
+                                    <option value="其他" th:selected="${item?.category == '其他'}">其他</option>
+                                </select>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="price" class="form-label">售价 <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">¥</span>
+                                        <input type="number" class="form-control" id="price" name="price" 
+                                               th:value="${item?.price}"
+                                               placeholder="0.00" step="0.01" min="0" required />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="originalPrice" class="form-label">原价</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">¥</span>
+                                        <input type="number" class="form-control" id="originalPrice" name="originalPrice" 
+                                               th:value="${item?.originalPrice}"
+                                               placeholder="0.00" step="0.01" min="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="itemCondition" class="form-label">商品成色 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="itemCondition" name="itemCondition" required>
+                                    <option value="">请选择成色</option>
+                                    <option value="1" th:selected="${item?.itemCondition == 1}">全新</option>
+                                    <option value="2" th:selected="${item?.itemCondition == 2}">良好</option>
+                                    <option value="3" th:selected="${item?.itemCondition == 3}">一般</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">商品描述 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" 
+                                          rows="5" placeholder="请详细描述商品的情况、购买时间、使用情况等" 
+                                          required maxlength="2000" th:text="${item?.description}"></textarea>
+                                <div class="form-text">详细的描述可以提高成交率</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="itemLocation" class="form-label">交易地点</label>
+                                    <input type="text" class="form-control" id="itemLocation" name="itemLocation" 
+                                           th:value="${item?.itemLocation}"
+                                           placeholder="例如：北京市海淀区" />
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactWay" class="form-label">联系方式</label>
+                                    <input type="text" class="form-control" id="contactWay" name="contactWay" 
+                                           th:value="${item?.contactWay}"
+                                           placeholder="例如：微信号、QQ号" />
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="imageUrls" class="form-label">商品图片</label>
+                                <input type="text" class="form-control" id="imageUrls" name="imageUrls" 
+                                       th:value="${item?.imageUrls}"
+                                       placeholder="图片URL，多个用逗号分隔" />
+                                <div class="form-text">支持多张图片，用英文逗号分隔URL</div>
+                            </div>
+                            
+                            <div class="mb-3" th:if="${item != null}">
+                                <label for="itemStatus" class="form-label">商品状态</label>
+                                <select class="form-select" id="itemStatus" name="itemStatus">
+                                    <option value="1" th:selected="${item?.itemStatus == 1}">上架</option>
+                                    <option value="2" th:selected="${item?.itemStatus == 2}">下架</option>
+                                    <option value="3" th:selected="${item?.itemStatus == 3}">已售出</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg" th:text="${item != null} ? '保存修改' : '发布商品'">发布商品</button>
+                                <a href="/" class="btn btn-outline-secondary">取消</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('#itemForm').submit(function(e) {
+            e.preventDefault();
+            
+            // Clear previous alerts
+            $('#errorAlert, #successAlert').hide();
+            
+            const itemId = $('#itemId').val();
+            const isEdit = itemId && itemId.length > 0;
+            
+            const formData = {
+                title: $('#title').val(),
+                description: $('#description').val(),
+                price: parseFloat($('#price').val()),
+                originalPrice: $('#originalPrice').val() ? parseFloat($('#originalPrice').val()) : null,
+                category: $('#category').val(),
+                itemCondition: parseInt($('#itemCondition').val()),
+                itemLocation: $('#itemLocation').val(),
+                contactWay: $('#contactWay').val(),
+                imageUrls: $('#imageUrls').val()
+            };
+            
+            // Include status if editing
+            if (isEdit && $('#itemStatus').length) {
+                formData.itemStatus = parseInt($('#itemStatus').val());
+            }
+            
+            const url = isEdit ? '/api/items/' + itemId : '/api/items';
+            const method = isEdit ? 'PUT' : 'POST';
+            
+            $.ajax({
+                url: url,
+                method: method,
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    if (response.success) {
+                        $('#successAlert').text(isEdit ? '商品更新成功！' : '商品发布成功！').show();
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 1500);
+                    } else {
+                        $('#errorAlert').text(response.message || '操作失败').show();
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        alert('请先登录');
+                        window.location.href = '/login.html';
+                    } else {
+                        const response = xhr.responseJSON;
+                        $('#errorAlert').text(response?.message || '操作失败，请稍后重试').show();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

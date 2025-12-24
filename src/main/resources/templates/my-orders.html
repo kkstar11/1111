@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的订单 - 二手交易平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .order-item {
+            transition: box-shadow 0.2s;
+        }
+        .order-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .order-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">二手交易平台</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/item-edit.html">发布商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/my-orders.html">我的订单</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user-center.html">个人中心</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 mb-5">
+        <h2 class="mb-4">我的订单</h2>
+        
+        <!-- Tabs for different order types -->
+        <ul class="nav nav-tabs mb-4" id="orderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="favorites-tab" data-bs-toggle="tab" 
+                        data-bs-target="#favorites" type="button" role="tab">
+                    我的收藏
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="purchases-tab" data-bs-toggle="tab" 
+                        data-bs-target="#purchases" type="button" role="tab">
+                    购买记录
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="sales-tab" data-bs-toggle="tab" 
+                        data-bs-target="#sales" type="button" role="tab">
+                    我的发布
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="orderTabsContent">
+            <!-- Favorites Tab -->
+            <div class="tab-pane fade show active" id="favorites" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12" th:each="favorite : ${favorites}">
+                        <div class="card order-item">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <img th:src="${favorite.item?.imageUrls != null and !#strings.isEmpty(favorite.item.imageUrls)} ? ${#strings.listSplit(favorite.item.imageUrls, ',')[0]} : 'https://via.placeholder.com/100?text=No+Image'" 
+                                             class="order-image rounded" 
+                                             th:alt="${favorite.item?.title}" />
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="mb-1" th:text="${favorite.item?.title}">商品标题</h5>
+                                        <p class="text-muted mb-2" th:text="${favorite.item?.description}">商品描述</p>
+                                        <span class="badge bg-info" th:text="${favorite.item?.category}">分类</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h4 class="text-danger mb-2" th:text="'¥' + ${favorite.item?.price}">¥0.00</h4>
+                                        <div class="d-grid gap-2">
+                                            <a th:href="@{/item-detail.html(id=${favorite.item?.id})}" class="btn btn-sm btn-primary">查看详情</a>
+                                            <button class="btn btn-sm btn-outline-danger remove-favorite-btn" 
+                                                    th:data-item-id="${favorite.itemId}">取消收藏</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty state -->
+                <div class="text-center py-5" th:if="${favorites == null or favorites.isEmpty()}">
+                    <h4 class="text-muted">暂无收藏</h4>
+                    <p>您还没有收藏任何商品</p>
+                    <a href="/" class="btn btn-primary">去逛逛</a>
+                </div>
+            </div>
+
+            <!-- Purchases Tab -->
+            <div class="tab-pane fade" id="purchases" role="tabpanel">
+                <div class="text-center py-5">
+                    <h4 class="text-muted">暂无购买记录</h4>
+                    <p>功能开发中，敬请期待</p>
+                    <a href="/" class="btn btn-primary">浏览商品</a>
+                </div>
+            </div>
+
+            <!-- Sales Tab -->
+            <div class="tab-pane fade" id="sales" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12" th:each="item : ${myItems}">
+                        <div class="card order-item">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <img th:src="${item.imageUrls != null and !#strings.isEmpty(item.imageUrls)} ? ${#strings.listSplit(item.imageUrls, ',')[0]} : 'https://via.placeholder.com/100?text=No+Image'" 
+                                             class="order-image rounded" 
+                                             th:alt="${item.title}" />
+                                    </div>
+                                    <div class="col">
+                                        <h5 class="mb-1" th:text="${item.title}">商品标题</h5>
+                                        <p class="text-muted mb-2" th:text="${item.description}">商品描述</p>
+                                        <div>
+                                            <span class="badge bg-info" th:text="${item.category}">分类</span>
+                                            <span class="badge bg-success ms-1" th:if="${item.itemStatus == 1}">在售</span>
+                                            <span class="badge bg-secondary ms-1" th:if="${item.itemStatus == 2}">下架</span>
+                                            <span class="badge bg-danger ms-1" th:if="${item.itemStatus == 3}">已售出</span>
+                                        </div>
+                                        <div class="mt-2 text-muted small">
+                                            <span th:text="'浏览: ' + ${item.viewCount ?: 0}">浏览: 0</span> | 
+                                            <span th:text="'收藏: ' + ${item.likeCount ?: 0}">收藏: 0</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h4 class="text-danger mb-2" th:text="'¥' + ${item.price}">¥0.00</h4>
+                                        <div class="d-grid gap-2">
+                                            <a th:href="@{/item-edit.html(id=${item.id})}" class="btn btn-sm btn-primary">编辑</a>
+                                            <a th:href="@{/item-detail.html(id=${item.id})}" class="btn btn-sm btn-outline-primary">查看</a>
+                                            <button class="btn btn-sm btn-outline-danger delete-item-btn" 
+                                                    th:data-item-id="${item.id}">删除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty state -->
+                <div class="text-center py-5" th:if="${myItems == null or myItems.isEmpty()}">
+                    <h4 class="text-muted">暂无发布商品</h4>
+                    <p>您还没有发布任何商品</p>
+                    <a href="/item-edit.html" class="btn btn-primary">发布商品</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Remove favorite handler
+        $('.remove-favorite-btn').click(function() {
+            const itemId = $(this).data('item-id');
+            const btn = $(this);
+            
+            if (confirm('确定要取消收藏吗？')) {
+                $.ajax({
+                    url: '/api/favorites',
+                    method: 'DELETE',
+                    data: { itemId: itemId },
+                    success: function(response) {
+                        if (response.success) {
+                            btn.closest('.col-12').fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        } else {
+                            alert('操作失败: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('操作失败，请稍后重试');
+                    }
+                });
+            }
+        });
+
+        // Delete item handler
+        $('.delete-item-btn').click(function() {
+            const itemId = $(this).data('item-id');
+            const btn = $(this);
+            
+            if (confirm('确定要删除这个商品吗？此操作不可恢复。')) {
+                $.ajax({
+                    url: '/api/items/' + itemId,
+                    method: 'DELETE',
+                    success: function(response) {
+                        if (response.success) {
+                            btn.closest('.col-12').fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        } else {
+                            alert('删除失败: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('删除失败，请稍后重试');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
