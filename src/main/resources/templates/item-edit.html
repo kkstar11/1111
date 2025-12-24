@@ -164,10 +164,21 @@
             const isEdit = itemId && itemId.length > 0;
             
             const formData = {
-                name: $('#title').val(),
+                title: $('#title').val(),
                 description: $('#description').val(),
-                price: parseFloat($('#price').val())
+                price: parseFloat($('#price').val()),
+                originalPrice: $('#originalPrice').val() ? parseFloat($('#originalPrice').val()) : null,
+                category: $('#category').val(),
+                itemCondition: parseInt($('#itemCondition').val()),
+                itemLocation: $('#itemLocation').val(),
+                contactWay: $('#contactWay').val(),
+                imageUrls: $('#imageUrls').val()
             };
+            
+            // Include status if editing
+            if (isEdit && $('#itemStatus').length) {
+                formData.itemStatus = parseInt($('#itemStatus').val());
+            }
             
             const url = isEdit ? '/api/items/' + itemId : '/api/items';
             const method = isEdit ? 'PUT' : 'POST';

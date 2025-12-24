@@ -183,11 +183,13 @@
         });
 
         // Order button Ajax handler
+        // Note: This is a simplified implementation. In production, this should call a backend API
+        // to create an actual order record and handle the transaction properly.
         $('#orderBtn').click(function() {
             const itemId = $(this).data('item-id');
             if (confirm('确认要下单购买此商品吗？')) {
-                // In a real system, this would create an order
-                // For now, we'll just show a success message
+                // TODO: Call backend API to create order
+                // $.ajax({ url: '/api/orders', method: 'POST', data: { itemId: itemId }, ... });
                 alert('下单成功！卖家将与您联系。');
             }
         });
