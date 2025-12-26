@@ -68,4 +68,14 @@ public class ItemController {
     public Result<List<ItemVO>> list() {
         return Result.success(itemService.listAll());
     }
+
+    @GetMapping("/my")
+    public Result<List<ItemVO>> myItems(@AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
+            return Result.failure("unauthorized");
+        }
+        Long ownerId = userDetails.getUserVO().getId();
+        List<ItemVO> list = itemService.listByOwnerId(ownerId);
+        return Result.success(list);
+    }
 }

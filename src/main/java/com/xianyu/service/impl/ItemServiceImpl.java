@@ -8,6 +8,7 @@ import com.xianyu.vo.ItemVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +96,24 @@ public class ItemServiceImpl implements ItemService {
         vo.setPrice(item.getPrice());
         vo.setOwnerId(item.getSellerId());
         return vo;
+    }
+
+    @Override
+    public List<ItemVO> listByOwnerId(Long ownerId) {
+        // Mapper查出商品实体
+        List<Item> entities = itemMapper.findBySeller(ownerId);
+        // 转为VO列表
+        List<ItemVO> voList = new ArrayList<>();
+        for (Item e : entities) {
+            ItemVO vo = new ItemVO();
+            vo.setId(e.getId());
+            vo.setName(e.getTitle()); // 你的item实体是title，VO是name
+            vo.setDescription(e.getDescription());
+            vo.setPrice(e.getPrice());
+            vo.setOwnerId(e.getSellerId());
+            voList.add(vo);
+        }
+        return voList;
     }
 }
 

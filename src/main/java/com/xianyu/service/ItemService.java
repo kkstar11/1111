@@ -17,5 +17,7 @@ ItemService {
     Optional<ItemVO> findById(Long id);
 
     List<ItemVO> listAll();
+
+    List<ItemVO> listByOwnerId(Long ownerId);
 }
 

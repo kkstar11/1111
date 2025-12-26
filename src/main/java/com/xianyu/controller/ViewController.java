@@ -1,9 +1,12 @@
 package com.xianyu.controller;
 
+import com.xianyu.security.MyUserDetails;
 import com.xianyu.service.FavoriteService;
 import com.xianyu.service.ItemService;
 import com.xianyu.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,26 +68,26 @@ public class ViewController {
         Long userId = null;
         Object u = session.getAttribute("currentUser");
         if (u instanceof UserVO vo) userId = vo.getId();
-        final Long finalUserId = userId;
         model.addAttribute("favorites", userId == null ? Collections.emptyList() : favoriteService.listByUser(userId));
-        // “已发布”商品
-        model.addAttribute("myItems",
-                userId == null ? Collections.emptyList()
-                        : itemService.listAll().stream()
-                        .filter(item -> finalUserId != null && finalUserId.equals(item.getOwnerId()))
-                        .toList()
+        // “已发布”商品（核心改动这行！）
+        model.addAttribute(
+                "myItems",
+                userId == null
+                        ? Collections.emptyList()
+                        : itemService.listByOwnerId(userId)
         );
         return "my-orders";
     }
 
-    // 个人中心
     @GetMapping("/user-center.html")
-    public String userCenter(Model model, HttpSession session) {
-        UserVO user = null;
-        Object u = session.getAttribute("currentUser");
-        if (u instanceof UserVO vo) user = vo;
-        model.addAttribute("user", user);
-        // model.addAttribute("stats", ...); // 可补充统计信息
+    public String userCenter(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
+            model.addAttribute("user", userDetails.getUserVO());
+        } else {
+            model.addAttribute("user", null);
+        }
         return "user-center";
     }
 }
