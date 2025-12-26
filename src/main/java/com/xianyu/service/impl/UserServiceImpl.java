@@ -38,7 +38,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setStudentId(dto.getUsername()); // 简化：用 username 当学号，若有单独字段可调整
         user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        String encodedPwd = passwordEncoder.encode(dto.getPassword());
+        System.out.println("[REGISTER] 原始密码: " + dto.getPassword() + " 加密后: " + encodedPwd);
+        user.setPassword(encodedPwd);
         user.setEmail(dto.getEmail());
         user.setUserStatus(1);
         user.setUserRole(0);
@@ -51,15 +53,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserVO> login(LoginDTO dto) {
         if (dto == null || isBlank(dto.getUsername()) || isBlank(dto.getPassword())) {
+            System.out.println("[LOGIN] 空用户名或密码，拒绝登录");
             return Optional.empty();
         }
         User user = userMapper.findByUsername(dto.getUsername()).orElse(null);
-        if (user == null || !passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        System.out.println("[LOGIN] 尝试登录，输入用户名: " + dto.getUsername() + ", 密码(明文): " + dto.getPassword());
+        if (user == null) {
+            System.out.println("[LOGIN] 用户未找到");
+            return Optional.empty();
+        }
+        System.out.println("[LOGIN] 数据库密码(BCrypt): " + user.getPassword());
+        boolean matches = passwordEncoder.matches(dto.getPassword(), user.getPassword());
+        System.out.println("[LOGIN] passwordEncoder.matches(输入明文, 数据库哈希): " + matches);
+        if (!matches) {
+            System.out.println("[LOGIN] 密码不匹配！");
             return Optional.empty();
         }
         if (user.getUserStatus() != null && user.getUserStatus() == 0) {
+            System.out.println("[LOGIN] 用户被禁用！");
             return Optional.empty();
         }
+        System.out.println("[LOGIN] 登录成功！");
         return Optional.of(toVO(user));
     }
 
@@ -73,11 +87,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.findByUsername(username);
     }
 
+    @Override
+    public Optional<UserVO> findByUsername(String username) {
+        return userMapper.findByUsername(username).map(this::toVO);
+    }
+
     private UserVO toVO(User user) {
         UserVO vo = new UserVO();
         vo.setId(user.getId());
         vo.setUsername(user.getUsername());
         vo.setEmail(user.getEmail());
+        // 必须带 password
+        vo.setPassword(user.getPassword());
+        // 有需要可拷贝更多字段
         return vo;
     }
 
@@ -102,4 +124,3 @@ public class UserServiceImpl implements UserService {
 
     private static final Pattern EMAIL = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$");
 }
-

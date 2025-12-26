@@ -1,8 +1,8 @@
 package com.xianyu.util;
 
 public enum ResponseCode {
-    SUCCESS(200, "success"),
-    FAILURE(500, "failure");
+    SUCCESS(200, "登录成功！"),
+    FAILURE(500, "登陆失败！");
 
     private final int code;
     private final String message;

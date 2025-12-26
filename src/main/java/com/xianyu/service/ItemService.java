@@ -6,7 +6,8 @@ import com.xianyu.vo.ItemVO;
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemService {
+public interface
+ItemService {
     ItemVO create(ItemDTO dto, Long ownerId);
 
     Optional<ItemVO> update(Long id, ItemDTO dto, Long ownerId);
