@@ -17,11 +17,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/favicon.ico",
-                                "/css/**", "/js/**", "/images/**", "/static/**",
+                                "/favicon.ico", "/css/**", "/js/**", "/images/**", "/static/**",
                                 "/login.html", "/register.html",
-                                "/api/users/login",        // 这个要写！
-                                "/api/users/register"
+                                "/api/users/login", "/api/users/register"
                         ).permitAll()
                         .requestMatchers(
                                 "/item-edit.html",
@@ -30,7 +28,22 @@ public class SecurityConfig {
                         ).authenticated()
                         .anyRequest().permitAll()
                 )
-                .formLogin(AbstractHttpConfigurer::disable);    // 如果你完全自定义前后端分离登录，可以保留
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint(
+                                (request, response, authException) -> {
+                                    String accept = request.getHeader("Accept");
+                                    if (accept != null && accept.contains("text/html")) {
+                                        response.sendRedirect("/login.html?from=" + request.getRequestURI());
+                                    } else {
+                                        response.setContentType("application/json;charset=UTF-8");
+                                        response.setStatus(401);
+                                        response.getWriter().write("{\"error\":\"用户未登录\"}");
+                                    }
+                                }
+                        )
+                );
         return http.build();
     }
 

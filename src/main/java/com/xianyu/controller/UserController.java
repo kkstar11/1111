@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -61,6 +60,13 @@ public class UserController {
         }
     }
 
+    @PostMapping("/logout")
+    public Result<Void> logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        SecurityContextHolder.clearContext();                // 清除Spring Security认证信息
+        System.out.println("[LOGOUT] 用户已注销");
+        return Result.success(null);
+    }
     @GetMapping("/{id}")
     public Result<UserVO> getUser(@PathVariable Long id) {
         System.out.println("[GET USER] userId: " + id);

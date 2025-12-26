@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -87,10 +87,6 @@
                         <span th:text="${user.username}">-</span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <strong>真实姓名:</strong>
-                        <span th:text="${user.realName ?: '未设置'}">-</span>
-                    </div>
-                    <div class="col-md-6 mb-3">
                         <strong>学号:</strong>
                         <span th:text="${user.studentId ?: '未设置'}">-</span>
                     </div>
@@ -113,16 +109,6 @@
                     <div class="col-md-6 mb-3">
                         <strong>年级:</strong>
                         <span th:text="${user.grade ?: '未设置'}">-</span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <strong>账号状态:</strong>
-                        <span class="badge bg-success" th:if="${user.userStatus == 1}">正常</span>
-                        <span class="badge bg-danger" th:if="${user.userStatus == 0}">禁用</span>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <strong>账号角色:</strong>
-                        <span class="badge bg-primary" th:if="${user.userRole == 1}">管理员</span>
-                        <span class="badge bg-secondary" th:if="${user.userRole == 0}">普通用户</span>
                     </div>
                 </div>
             </div>
@@ -203,13 +189,20 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
 
         function logout() {
             if (confirm('确定要退出登录吗？')) {
-                alert('退出登录成功');
-                window.location.href = '/login.html';
+                $.ajax({
+                    url: '/api/users/logout',
+                    type: 'POST',
+                    success: function(res) {
+                        alert('退出登录成功');
+                        window.location.href = '/login.html';
+                    }
+                });
             }
         }
     </script>
