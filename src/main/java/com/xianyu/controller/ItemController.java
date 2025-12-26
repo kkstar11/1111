@@ -48,7 +48,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<Void> delete(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public Result<Void> delete(@PathVariable("id") Long id, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
             return Result.failure("unauthorized");
         }
