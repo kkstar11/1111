@@ -38,11 +38,7 @@ public class ViewController {
     public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
         itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
         // 添加当前登录用户信息到模板
-        if (userDetails != null) {
-            model.addAttribute("currentUser", userDetails.getUserVO());
-        } else {
-            model.addAttribute("currentUser", null);
-        }
+        model.addAttribute("currentUser", userDetails != null ? userDetails.getUserVO() : null);
         return "item-detail";
     }
 
