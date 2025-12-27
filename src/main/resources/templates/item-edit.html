@@ -376,7 +376,9 @@
             selectedImages.splice(index, 1);
             
             // Remove preview element
-            $(`.image-preview-item[data-index="${index}"]`).remove();
+            $('.image-preview-item[data-index]').filter(function() {
+                return $(this).attr('data-index') == index;
+            }).remove();
             
             // Update remaining indices and re-bind click handlers
             $('.image-preview-item[data-index]').each(function() {
@@ -393,7 +395,9 @@
         }
         
         function removeImageByUrl(url) {
-            $(`[data-url="${url}"]`).remove();
+            $('.image-preview-item[data-url]').filter(function() {
+                return $(this).attr('data-url') === url;
+            }).remove();
             updateImageUrlsField();
         }
         
