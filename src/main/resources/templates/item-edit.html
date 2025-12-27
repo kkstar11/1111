@@ -377,7 +377,7 @@
             
             // Remove preview element
             $('.image-preview-item[data-index]').filter(function() {
-                return $(this).attr('data-index') == index;
+                return parseInt($(this).attr('data-index')) === index;
             }).remove();
             
             // Update remaining indices and re-bind click handlers
