@@ -35,8 +35,15 @@ public class ViewController {
 
     // 商品详情页
     @GetMapping("/item-detail.html")
-    public String itemDetail(@RequestParam("id") Long id, Model model) {
-        itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
+    public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
+        itemService.findById(id).ifPresent(item -> {
+            model.addAttribute("item", item);
+            // 判断当前用户是否为商品发布者
+            boolean isOwner = userDetails != null && userDetails.getUserVO() != null 
+                    && item.getOwnerId() != null 
+                    && item.getOwnerId().equals(userDetails.getUserVO().getId());
+            model.addAttribute("isOwner", isOwner);
+        });
         return "item-detail";
     }
 
