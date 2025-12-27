@@ -35,8 +35,14 @@ public class ViewController {
 
     // 商品详情页
     @GetMapping("/item-detail.html")
-    public String itemDetail(@RequestParam("id") Long id, Model model) {
+    public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
         itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
+        // 添加当前登录用户信息到模板
+        if (userDetails != null) {
+            model.addAttribute("currentUser", userDetails.getUserVO());
+        } else {
+            model.addAttribute("currentUser", null);
+        }
         return "item-detail";
     }
 
