@@ -36,7 +36,14 @@ public class ViewController {
     // 商品详情页
     @GetMapping("/item-detail.html")
     public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-        itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
+        itemService.findById(id).ifPresent(item -> {
+            model.addAttribute("item", item);
+            // 判断当前用户是否为商品发布者
+            boolean isOwner = userDetails != null && userDetails.getUserVO() != null 
+                    && item.getOwnerId() != null 
+                    && item.getOwnerId().equals(userDetails.getUserVO().getId());
+            model.addAttribute("isOwner", isOwner);
+        });
         // 添加当前登录用户信息到模板
         model.addAttribute("currentUser", userDetails != null ? userDetails.getUserVO() : null);
         return "item-detail";

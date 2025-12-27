@@ -82,7 +82,7 @@
                 </button>
                 <button class="btn btn-success btn-lg" id="orderBtn" th:data-item-id="${item.id}">立即下单</button>
                 <!-- 编辑按钮仅当当前用户为商品发布者时显示 -->
-                <a th:if="${currentUser != null and item.ownerId != null and currentUser.id != null and item.ownerId == currentUser.id}" th:href="@{/item-edit.html(id=${item.id})}" class="btn btn-outline-secondary">编辑商品</a>
+                <a th:if="${isOwner}" th:href="@{/item-edit.html(id=${item.id})}" class="btn btn-outline-secondary">编辑商品</a>
             </div>
         </div>
     </div>
