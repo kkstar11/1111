@@ -44,8 +44,6 @@ public class ViewController {
                     && item.getOwnerId().equals(userDetails.getUserVO().getId());
             model.addAttribute("isOwner", isOwner);
         });
-        // 添加当前登录用户信息到模板
-        model.addAttribute("currentUser", userDetails != null ? userDetails.getUserVO() : null);
         return "item-detail";
     }
 
