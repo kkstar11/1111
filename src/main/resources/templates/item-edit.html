@@ -260,21 +260,33 @@
             });
             
             // Drag and drop events
+            let dragCounter = 0;
+            
+            $('#uploadBox').on('dragenter', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragCounter++;
+                $(this).addClass('drag-over');
+            });
+            
             $('#uploadBox').on('dragover', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                $(this).addClass('drag-over');
             });
             
             $('#uploadBox').on('dragleave', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                $(this).removeClass('drag-over');
+                dragCounter--;
+                if (dragCounter === 0) {
+                    $(this).removeClass('drag-over');
+                }
             });
             
             $('#uploadBox').on('drop', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                dragCounter = 0;
                 $(this).removeClass('drag-over');
                 
                 const files = e.originalEvent.dataTransfer.files;
@@ -297,56 +309,85 @@
                 
                 // Validate file type
                 if (!file.type.match('image.*')) {
-                    alert('请选择图片文件！');
+                    $('#errorAlert').text('请选择图片文件！').show();
+                    setTimeout(function() { $('#errorAlert').hide(); }, 3000);
                     continue;
                 }
                 
-                // Store file reference
+                // Store file reference and capture index
+                const currentIndex = selectedImages.length;
                 selectedImages.push(file);
                 
                 // Create preview
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    addImagePreview(e.target.result, selectedImages.length - 1);
-                };
+                reader.onload = (function(index) {
+                    return function(e) {
+                        addImagePreview(e.target.result, index);
+                    };
+                })(currentIndex);
                 reader.readAsDataURL(file);
             }
         }
         
         function addImagePreview(src, index) {
-            const previewHtml = `
-                <div class="image-preview-item" data-index="${index}">
-                    <img src="${src}" alt="预览图片">
-                    <button type="button" class="remove-btn" onclick="removeImage(${index})">×</button>
-                </div>
-            `;
-            $('#imagePreviewContainer').append(previewHtml);
+            const previewDiv = $('<div></div>')
+                .addClass('image-preview-item')
+                .attr('data-index', index);
+            
+            const img = $('<img>')
+                .attr('src', src)
+                .attr('alt', '预览图片');
+            
+            const removeBtn = $('<button></button>')
+                .attr('type', 'button')
+                .addClass('remove-btn')
+                .text('×')
+                .on('click', function() {
+                    removeImage(index);
+                });
+            
+            previewDiv.append(img).append(removeBtn);
+            $('#imagePreviewContainer').append(previewDiv);
         }
         
         function addImagePreviewFromUrl(url) {
-            const previewHtml = `
-                <div class="image-preview-item" data-url="${url}">
-                    <img src="${url}" alt="预览图片">
-                    <button type="button" class="remove-btn" onclick="removeImageByUrl('${url}')">×</button>
-                </div>
-            `;
-            $('#imagePreviewContainer').append(previewHtml);
+            const previewDiv = $('<div></div>')
+                .addClass('image-preview-item')
+                .attr('data-url', url);
+            
+            const img = $('<img>')
+                .attr('src', url)
+                .attr('alt', '预览图片');
+            
+            const removeBtn = $('<button></button>')
+                .attr('type', 'button')
+                .addClass('remove-btn')
+                .text('×')
+                .on('click', function() {
+                    removeImageByUrl(url);
+                });
+            
+            previewDiv.append(img).append(removeBtn);
+            $('#imagePreviewContainer').append(previewDiv);
         }
         
         function removeImage(index) {
             // Remove from array
             selectedImages.splice(index, 1);
             
-            // Remove preview and update indices
-            $(`[data-index="${index}"]`).remove();
+            // Remove preview element
+            $(`.image-preview-item[data-index="${index}"]`).remove();
             
-            // Update remaining indices
-            $('.image-preview-item[data-index]').each(function(i) {
+            // Update remaining indices and re-bind click handlers
+            $('.image-preview-item[data-index]').each(function() {
                 const currentIndex = parseInt($(this).attr('data-index'));
                 if (currentIndex > index) {
                     const newIndex = currentIndex - 1;
                     $(this).attr('data-index', newIndex);
-                    $(this).find('.remove-btn').attr('onclick', `removeImage(${newIndex})`);
+                    // Re-bind the click handler with new index
+                    $(this).find('.remove-btn').off('click').on('click', function() {
+                        removeImage(newIndex);
+                    });
                 }
             });
         }
