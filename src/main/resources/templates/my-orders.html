@@ -148,7 +148,9 @@
                                 <div class="col-auto">
                                     <h4 class="text-danger mb-2" th:text="'¥' + ${item.price}">¥0.00</h4>
                                     <div class="d-grid gap-2">
+                                        <!-- 只有上架(1)和下架(2)状态的商品可以切换状态，已售出(3)的商品不可切换 -->
                                         <button class="btn btn-sm btn-warning toggle-status-btn"
+                                                th:if="${item.status == 1 || item.status == 2}"
                                                 th:data-item-id="${item.id}"
                                                 th:data-current-status="${item.status}"
                                                 th:text="${item.status == 1 ? '下架' : '上架'}">上架/下架</button>
@@ -231,6 +233,13 @@
     $('.toggle-status-btn').click(function() {
         const itemId = $(this).data('item-id');
         const currentStatus = $(this).data('current-status');
+        
+        // 只允许在状态1(上架)和2(下架)之间切换
+        if (currentStatus !== 1 && currentStatus !== 2) {
+            alert('已售出的商品不能修改状态');
+            return;
+        }
+        
         const newStatus = currentStatus == 1 ? 2 : 1; // 1上架 -> 2下架, 2下架 -> 1上架
         const btn = $(this);
         const cardBody = btn.closest('.card-body');

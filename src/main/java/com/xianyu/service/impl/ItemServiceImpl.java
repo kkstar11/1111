@@ -140,13 +140,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public boolean updateStatus(Long id, Integer status, Long ownerId) {
-        // 验证status值是否合法 (1上架, 2下架)
+        // 验证status值是否合法
+        // 只允许在"上架"(1)和"下架"(2)之间切换
+        // 已售出(3)的商品不允许通过此接口修改状态
         if (status == null || (status != STATUS_ON_SALE && status != STATUS_OFF_SALE)) {
             return false;
         }
         // 查询商品是否存在，并验证是否为所有者
         Item existing = itemMapper.findById(id).orElse(null);
         if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
+            return false;
+        }
+        // 不允许修改已售出商品的状态
+        if (existing.getStatus() != null && existing.getStatus() == STATUS_SOLD) {
             return false;
         }
         // 更新状态
