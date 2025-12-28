@@ -78,4 +78,24 @@ public class ItemController {
         List<ItemVO> list = itemService.listByOwnerId(ownerId);
         return Result.success(list);
     }
+
+    @PutMapping("/{id}/status")
+    public Result<ItemVO> updateStatus(@PathVariable Long id, @RequestBody java.util.Map<String, Integer> payload, @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
+            return Result.failure("unauthorized");
+        }
+        Long ownerId = userDetails.getUserVO().getId();
+        Integer status = payload.get("status");
+        if (status == null) {
+            return Result.failure("status is required");
+        }
+        boolean ok = itemService.updateStatus(id, status, ownerId);
+        if (!ok) {
+            return Result.failure("update failed or no permission");
+        }
+        // 返回更新后的商品信息
+        return itemService.findById(id)
+                .map(Result::success)
+                .orElseGet(() -> Result.failure("item not found"));
+    }
 }

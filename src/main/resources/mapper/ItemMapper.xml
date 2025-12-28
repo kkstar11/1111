@@ -10,7 +10,7 @@
         <result property="originalPrice" column="original_price"/>
         <result property="category" column="category"/>
         <result property="itemCondition" column="item_condition"/>
-        <result property="itemStatus" column="item_status"/>
+        <result property="status" column="status"/>
         <result property="sellerId" column="seller_id"/>
         <result property="contactWay" column="contact_way"/>
         <result property="itemLocation" column="item_location"/>
@@ -22,8 +22,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.Item" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO item (title, description, price, original_price, category, item_condition, item_status, seller_id, contact_way, item_location, image_urls, view_count, like_count)
-        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{itemCondition}, #{itemStatus}, #{sellerId}, #{contactWay}, #{itemLocation}, #{imageUrls}, #{viewCount}, #{likeCount})
+        INSERT INTO item (title, description, price, original_price, category, item_condition, status, seller_id, contact_way, item_location, image_urls, view_count, like_count)
+        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{itemCondition}, #{status}, #{sellerId}, #{contactWay}, #{itemLocation}, #{imageUrls}, #{viewCount}, #{likeCount})
     </insert>
 
     <update id="update" parameterType="com.xianyu.entity.Item">
@@ -34,7 +34,7 @@
             original_price = #{originalPrice},
             category = #{category},
             item_condition = #{itemCondition},
-            item_status = #{itemStatus},
+            status = #{status},
             contact_way = #{contactWay},
             item_location = #{itemLocation},
             image_urls = #{imageUrls},
@@ -63,5 +63,11 @@
     <select id="findByCategory" resultMap="ItemMap">
         SELECT * FROM item WHERE category = #{category} ORDER BY create_time DESC
     </select>
+
+    <update id="updateStatus">
+        UPDATE item
+        SET status = #{status}, update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
 </mapper>
 

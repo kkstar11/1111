@@ -78,9 +78,9 @@
                         <span class="price" th:text="'¥' + ${item.price}">¥0.00</span>
                         <!-- 状态badge全部注释，后续VO有字段再放开 -->
                         <!--
-                        <span class="badge bg-success" th:if="${item.itemStatus == 1}">在售</span>
-                        <span class="badge bg-secondary" th:if="${item.itemStatus == 2}">下架</span>
-                        <span class="badge bg-danger" th:if="${item.itemStatus == 3}">已售出</span>
+                        <span class="badge bg-success" th:if="${item.status == 1}">在售</span>
+                        <span class="badge bg-secondary" th:if="${item.status == 2}">下架</span>
+                        <span class="badge bg-danger" th:if="${item.status == 3}">已售出</span>
                         -->
                     </div>
                     <!-- 这些viewCount/likeCount也注释掉 -->

@@ -30,7 +30,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
         item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
         item.setItemCondition(dto.getItemCondition() != null ? dto.getItemCondition() : 2);
-        item.setItemStatus(1);
+        item.setStatus(1);
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
         item.setItemLocation(dto.getItemLocation());
@@ -60,8 +60,8 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getItemCondition() != null) {
             existing.setItemCondition(dto.getItemCondition());
         }
-        if (dto.getItemStatus() != null) {
-            existing.setItemStatus(dto.getItemStatus());
+        if (dto.getStatus() != null) {
+            existing.setStatus(dto.getStatus());
         }
         if (dto.getContactWay() != null) {
             existing.setContactWay(dto.getContactWay());
@@ -117,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
         vo.setOriginalPrice(item.getOriginalPrice());
         vo.setCategory(item.getCategory());
         vo.setItemCondition(item.getItemCondition());
-        vo.setItemStatus(item.getItemStatus());
+        vo.setStatus(item.getStatus());
         vo.setOwnerId(item.getSellerId());
         vo.setContactWay(item.getContactWay());
         vo.setItemLocation(item.getItemLocation());
@@ -131,6 +131,22 @@ public class ItemServiceImpl implements ItemService {
         List<Item> entities = itemMapper.findBySeller(ownerId);
         // 转为VO列表
         return entities.stream().map(this::toVO).toList();
+    }
+
+    @Override
+    public boolean updateStatus(Long id, Integer status, Long ownerId) {
+        // 验证status值是否合法 (1上架, 2下架)
+        if (status == null || (status != 1 && status != 2)) {
+            return false;
+        }
+        // 查询商品是否存在，并验证是否为所有者
+        Item existing = itemMapper.findById(id).orElse(null);
+        if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
+            return false;
+        }
+        // 更新状态
+        int updated = itemMapper.updateStatus(id, status);
+        return updated > 0;
     }
 }
 

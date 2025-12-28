@@ -140,19 +140,18 @@
                                 <div class="col">
                                     <h5 class="mb-1" th:text="${item.name}">商品标题</h5>
                                     <p class="text-muted mb-2" th:text="${item.description}">商品描述</p>
-                                    <!-- 分类、状态等属性暂不显示，如VO增加对应字段可解注释 -->
-                                     <span class="badge bg-info" th:text="${item.category}">分类</span>
-                                    <!-- <span class="badge bg-success ms-1" th:if="${item.itemStatus == 1}">在售</span> -->
-                                    <!-- <span class="badge bg-secondary ms-1" th:if="${item.itemStatus == 2}">下架</span> -->
-                                    <!-- <span class="badge bg-danger ms-1" th:if="${item.itemStatus == 3}">已售出</span> -->
-                                    <!-- <div class="mt-2 text-muted small">
-                                        <span th:text="'浏览: ' + ${item.viewCount ?: 0}">浏览: 0</span> |
-                                        <span th:text="'收藏: ' + ${item.likeCount ?: 0}">收藏: 0</span>
-                                    </div> -->
+                                    <span class="badge bg-info" th:text="${item.category}">分类</span>
+                                    <span class="badge bg-success ms-1" th:if="${item.status == 1}">上架</span>
+                                    <span class="badge bg-secondary ms-1" th:if="${item.status == 2}">下架</span>
+                                    <span class="badge bg-danger ms-1" th:if="${item.status == 3}">已售出</span>
                                 </div>
                                 <div class="col-auto">
                                     <h4 class="text-danger mb-2" th:text="'¥' + ${item.price}">¥0.00</h4>
                                     <div class="d-grid gap-2">
+                                        <button class="btn btn-sm btn-warning toggle-status-btn"
+                                                th:data-item-id="${item.id}"
+                                                th:data-current-status="${item.status}"
+                                                th:text="${item.status == 1 ? '下架' : '上架'}">上架/下架</button>
                                         <a th:href="@{/item-edit.html(id=${item.id})}" class="btn btn-sm btn-primary">编辑</a>
                                         <a th:href="@{/item-detail.html(id=${item.id})}" class="btn btn-sm btn-outline-primary">查看</a>
                                         <button class="btn btn-sm btn-outline-danger delete-item-btn"
@@ -226,6 +225,43 @@
                 }
             });
         }
+    });
+
+    // Toggle status handler (上架/下架)
+    $('.toggle-status-btn').click(function() {
+        const itemId = $(this).data('item-id');
+        const currentStatus = $(this).data('current-status');
+        const newStatus = currentStatus == 1 ? 2 : 1; // 1上架 -> 2下架, 2下架 -> 1上架
+        const btn = $(this);
+        const statusBadge = btn.closest('.card-body').find('.badge:contains("上架"), .badge:contains("下架")');
+
+        $.ajax({
+            url: '/api/items/' + itemId + '/status',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ status: newStatus }),
+            success: function(response) {
+                if (response.success) {
+                    // 更新按钮文本和data属性
+                    btn.data('current-status', newStatus);
+                    btn.text(newStatus == 1 ? '下架' : '上架');
+                    
+                    // 更新状态徽章
+                    if (newStatus == 1) {
+                        statusBadge.removeClass('bg-secondary').addClass('bg-success').text('上架');
+                    } else {
+                        statusBadge.removeClass('bg-success').addClass('bg-secondary').text('下架');
+                    }
+                    
+                    alert('状态更新成功');
+                } else {
+                    alert('状态更新失败: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('状态更新失败，请稍后重试');
+            }
+        });
     });
 </script>
 </body>
