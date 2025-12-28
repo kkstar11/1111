@@ -8,9 +8,11 @@ public class ItemVO {
     private String name;
     private String description;
     private BigDecimal price;
-    private Long ownerId;
-    private String category;
     private BigDecimal originalPrice;
+    private String category;
+    private Integer itemCondition;
+    private Integer itemStatus;
+    private Long ownerId;
 
     public Long getId() {
         return id;
@@ -44,6 +46,38 @@ public class ItemVO {
         this.price = price;
     }
 
+    public BigDecimal getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(BigDecimal originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getItemCondition() {
+        return itemCondition;
+    }
+
+    public void setItemCondition(Integer itemCondition) {
+        this.itemCondition = itemCondition;
+    }
+
+    public Integer getItemStatus() {
+        return itemStatus;
+    }
+
+    public void setItemStatus(Integer itemStatus) {
+        this.itemStatus = itemStatus;
+    }
+
     public Long getOwnerId() {
         return ownerId;
     }
@@ -51,13 +85,5 @@ public class ItemVO {
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
-
-    public String getCategory() { return category; }
-
-    public void setCategory(String category) { this.category = category; }
-
-    public BigDecimal getOriginalPrice() { return originalPrice; }
-
-    public void setOriginalPrice(BigDecimal originalPrice) { this.originalPrice = originalPrice; }
 }
 

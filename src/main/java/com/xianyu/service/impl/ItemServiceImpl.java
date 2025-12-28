@@ -8,7 +8,6 @@ import com.xianyu.vo.ItemVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +27,14 @@ public class ItemServiceImpl implements ItemService {
         item.setTitle(dto.getName());
         item.setDescription(dto.getDescription());
         item.setPrice(dto.getPrice());
-        item.setOriginalPrice(dto.getPrice());
-        item.setCategory("default");
-        item.setItemCondition(2);
+        item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
+        item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
+        item.setItemCondition(dto.getItemCondition() != null ? dto.getItemCondition() : 2);
         item.setItemStatus(1);
         item.setSellerId(ownerId);
-        item.setContactWay(null);
-        item.setItemLocation(null);
-        item.setImageUrls(null);
+        item.setContactWay(dto.getContactWay());
+        item.setItemLocation(dto.getItemLocation());
+        item.setImageUrls(dto.getImageUrls());
         item.setViewCount(0);
         item.setLikeCount(0);
         itemMapper.insert(item);
@@ -52,6 +51,27 @@ public class ItemServiceImpl implements ItemService {
         existing.setTitle(dto.getName());
         existing.setDescription(dto.getDescription());
         existing.setPrice(dto.getPrice());
+        if (dto.getOriginalPrice() != null) {
+            existing.setOriginalPrice(dto.getOriginalPrice());
+        }
+        if (dto.getCategory() != null) {
+            existing.setCategory(dto.getCategory());
+        }
+        if (dto.getItemCondition() != null) {
+            existing.setItemCondition(dto.getItemCondition());
+        }
+        if (dto.getItemStatus() != null) {
+            existing.setItemStatus(dto.getItemStatus());
+        }
+        if (dto.getContactWay() != null) {
+            existing.setContactWay(dto.getContactWay());
+        }
+        if (dto.getItemLocation() != null) {
+            existing.setItemLocation(dto.getItemLocation());
+        }
+        if (dto.getImageUrls() != null) {
+            existing.setImageUrls(dto.getImageUrls());
+        }
         itemMapper.update(existing);
         return itemMapper.findById(id).map(this::toVO);
     }
@@ -94,7 +114,14 @@ public class ItemServiceImpl implements ItemService {
         vo.setName(item.getTitle());
         vo.setDescription(item.getDescription());
         vo.setPrice(item.getPrice());
+        vo.setOriginalPrice(item.getOriginalPrice());
+        vo.setCategory(item.getCategory());
+        vo.setItemCondition(item.getItemCondition());
+        vo.setItemStatus(item.getItemStatus());
         vo.setOwnerId(item.getSellerId());
+        vo.setContactWay(item.getContactWay());
+        vo.setItemLocation(item.getItemLocation());
+        vo.setImageUrls(item.getImageUrls());
         return vo;
     }
 
@@ -103,17 +130,7 @@ public class ItemServiceImpl implements ItemService {
         // Mapper查出商品实体
         List<Item> entities = itemMapper.findBySeller(ownerId);
         // 转为VO列表
-        List<ItemVO> voList = new ArrayList<>();
-        for (Item e : entities) {
-            ItemVO vo = new ItemVO();
-            vo.setId(e.getId());
-            vo.setName(e.getTitle()); // 你的item实体是title，VO是name
-            vo.setDescription(e.getDescription());
-            vo.setPrice(e.getPrice());
-            vo.setOwnerId(e.getSellerId());
-            voList.add(vo);
-        }
-        return voList;
+        return entities.stream().map(this::toVO).toList();
     }
 }
 
