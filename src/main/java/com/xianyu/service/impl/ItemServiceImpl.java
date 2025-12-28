@@ -16,6 +16,11 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemMapper itemMapper;
 
+    // 商品状态常量
+    private static final int STATUS_ON_SALE = 1;    // 上架
+    private static final int STATUS_OFF_SALE = 2;   // 下架
+    private static final int STATUS_SOLD = 3;       // 已售出
+
     public ItemServiceImpl(ItemMapper itemMapper) {
         this.itemMapper = itemMapper;
     }
@@ -30,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
         item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
         item.setItemCondition(dto.getItemCondition() != null ? dto.getItemCondition() : 2);
-        item.setStatus(1);
+        item.setStatus(STATUS_ON_SALE);
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
         item.setItemLocation(dto.getItemLocation());
@@ -136,7 +141,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean updateStatus(Long id, Integer status, Long ownerId) {
         // 验证status值是否合法 (1上架, 2下架)
-        if (status == null || (status != 1 && status != 2)) {
+        if (status == null || (status != STATUS_ON_SALE && status != STATUS_OFF_SALE)) {
             return false;
         }
         // 查询商品是否存在，并验证是否为所有者

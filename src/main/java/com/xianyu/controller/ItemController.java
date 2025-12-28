@@ -1,6 +1,7 @@
 package com.xianyu.controller;
 
 import com.xianyu.dto.ItemDTO;
+import com.xianyu.dto.StatusUpdateDTO;
 import com.xianyu.service.ItemService;
 import com.xianyu.util.Result;
 import com.xianyu.vo.ItemVO;
@@ -80,12 +81,12 @@ public class ItemController {
     }
 
     @PutMapping("/{id}/status")
-    public Result<ItemVO> updateStatus(@PathVariable Long id, @RequestBody java.util.Map<String, Integer> payload, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public Result<ItemVO> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
             return Result.failure("unauthorized");
         }
         Long ownerId = userDetails.getUserVO().getId();
-        Integer status = payload.get("status");
+        Integer status = dto.getStatus();
         if (status == null) {
             return Result.failure("status is required");
         }
