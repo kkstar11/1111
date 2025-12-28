@@ -9,6 +9,8 @@ public class ItemVO {
     private String description;
     private BigDecimal price;
     private Long ownerId;
+    private String category;
+    private BigDecimal originalPrice;
 
     public Long getId() {
         return id;
@@ -49,5 +51,13 @@ public class ItemVO {
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
+
+    public String getCategory() { return category; }
+
+    public void setCategory(String category) { this.category = category; }
+
+    public BigDecimal getOriginalPrice() { return originalPrice; }
+
+    public void setOriginalPrice(BigDecimal originalPrice) { this.originalPrice = originalPrice; }
 }
 
