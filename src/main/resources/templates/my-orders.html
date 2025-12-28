@@ -230,7 +230,7 @@
     });
 
     // Toggle status handler (上架/下架)
-    $('.toggle-status-btn').click(function() {
+    $(document).on('click', '.toggle-status-btn', function() {
         const itemId = $(this).data('item-id');
         const currentStatus = $(this).data('current-status');
         
@@ -240,7 +240,7 @@
             return;
         }
         
-        const newStatus = currentStatus == 1 ? 2 : 1; // 1上架 -> 2下架, 2下架 -> 1上架
+        const newStatus = currentStatus === 1 ? 2 : 1; // 1上架 -> 2下架, 2下架 -> 1上架
         const btn = $(this);
         const cardBody = btn.closest('.card-body');
 
@@ -253,12 +253,12 @@
                 if (response.success) {
                     // 更新按钮文本和data属性
                     btn.data('current-status', newStatus);
-                    btn.text(newStatus == 1 ? '下架' : '上架');
+                    btn.text(newStatus === 1 ? '下架' : '上架');
                     
                     // 更新状态徽章 - 查找状态相关的徽章（上架/下架，不包括已售出）
                     const statusBadges = cardBody.find('.badge.bg-success, .badge.bg-secondary');
                     if (statusBadges.length > 0) {
-                        if (newStatus == 1) {
+                        if (newStatus === 1) {
                             statusBadges.removeClass('bg-secondary').addClass('bg-success').text('上架');
                         } else {
                             statusBadges.removeClass('bg-success').addClass('bg-secondary').text('下架');
