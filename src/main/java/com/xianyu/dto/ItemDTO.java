@@ -13,7 +13,7 @@ public class ItemDTO {
     private String contactWay;
     private String itemLocation;
     private String imageUrls;
-    private Integer itemStatus;
+    private Integer status;
 
     public String getName() {
         return name;
@@ -87,12 +87,12 @@ public class ItemDTO {
         this.imageUrls = imageUrls;
     }
 
-    public Integer getItemStatus() {
-        return itemStatus;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setItemStatus(Integer itemStatus) {
-        this.itemStatus = itemStatus;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
 

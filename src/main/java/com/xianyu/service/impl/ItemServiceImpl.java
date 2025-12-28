@@ -16,6 +16,11 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemMapper itemMapper;
 
+    // 商品状态常量
+    private static final int STATUS_ON_SALE = 1;    // 上架
+    private static final int STATUS_OFF_SALE = 2;   // 下架
+    private static final int STATUS_SOLD = 3;       // 已售出
+
     public ItemServiceImpl(ItemMapper itemMapper) {
         this.itemMapper = itemMapper;
     }
@@ -30,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
         item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
         item.setItemCondition(dto.getItemCondition() != null ? dto.getItemCondition() : 2);
-        item.setItemStatus(1);
+        item.setStatus(STATUS_ON_SALE);
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
         item.setItemLocation(dto.getItemLocation());
@@ -60,8 +65,8 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getItemCondition() != null) {
             existing.setItemCondition(dto.getItemCondition());
         }
-        if (dto.getItemStatus() != null) {
-            existing.setItemStatus(dto.getItemStatus());
+        if (dto.getStatus() != null) {
+            existing.setStatus(dto.getStatus());
         }
         if (dto.getContactWay() != null) {
             existing.setContactWay(dto.getContactWay());
@@ -117,7 +122,7 @@ public class ItemServiceImpl implements ItemService {
         vo.setOriginalPrice(item.getOriginalPrice());
         vo.setCategory(item.getCategory());
         vo.setItemCondition(item.getItemCondition());
-        vo.setItemStatus(item.getItemStatus());
+        vo.setStatus(item.getStatus());
         vo.setOwnerId(item.getSellerId());
         vo.setContactWay(item.getContactWay());
         vo.setItemLocation(item.getItemLocation());
@@ -131,6 +136,28 @@ public class ItemServiceImpl implements ItemService {
         List<Item> entities = itemMapper.findBySeller(ownerId);
         // 转为VO列表
         return entities.stream().map(this::toVO).toList();
+    }
+
+    @Override
+    public boolean updateStatus(Long id, Integer status, Long ownerId) {
+        // 验证status值是否合法
+        // 只允许在"上架"(1)和"下架"(2)之间切换
+        // 已售出(3)的商品不允许通过此接口修改状态
+        if (status == null || (status != STATUS_ON_SALE && status != STATUS_OFF_SALE)) {
+            return false;
+        }
+        // 查询商品是否存在，并验证是否为所有者
+        Item existing = itemMapper.findById(id).orElse(null);
+        if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
+            return false;
+        }
+        // 不允许修改已售出商品的状态
+        if (existing.getStatus() != null && existing.getStatus() == STATUS_SOLD) {
+            return false;
+        }
+        // 更新状态
+        int updated = itemMapper.updateStatus(id, status);
+        return updated > 0;
     }
 }
 

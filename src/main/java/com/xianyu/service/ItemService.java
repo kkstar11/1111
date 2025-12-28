@@ -19,5 +19,7 @@ ItemService {
     List<ItemVO> listAll();
 
     List<ItemVO> listByOwnerId(Long ownerId);
+
+    boolean updateStatus(Long id, Integer status, Long ownerId);
 }
 

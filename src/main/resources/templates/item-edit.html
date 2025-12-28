@@ -224,11 +224,11 @@
                             </div>
                             
                             <div class="mb-3" th:if="${item != null}">
-                                <label for="itemStatus" class="form-label">商品状态</label>
-                                <select class="form-select" id="itemStatus" name="itemStatus">
-                                    <option value="1" th:selected="${item?.itemStatus == 1}">上架</option>
-                                    <option value="2" th:selected="${item?.itemStatus == 2}">下架</option>
-                                    <option value="3" th:selected="${item?.itemStatus == 3}">已售出</option>
+                                <label for="status" class="form-label">商品状态</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1" th:selected="${item?.status == 1}">上架</option>
+                                    <option value="2" th:selected="${item?.status == 2}">下架</option>
+                                    <option value="3" th:selected="${item?.status == 3}">已售出</option>
                                 </select>
                             </div>
                             
@@ -434,8 +434,8 @@
             };
             console.log('formData', formData);
             // Include status if editing
-            if (isEdit && $('#itemStatus').length) {
-                formData.itemStatus = parseInt($('#itemStatus').val());
+            if (isEdit && $('#status').length) {
+                formData.status = parseInt($('#status').val());
             }
             
             const url = isEdit ? '/api/items/' + itemId : '/api/items';

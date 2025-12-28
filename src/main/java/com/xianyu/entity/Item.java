@@ -12,7 +12,7 @@ public class Item {
     private BigDecimal originalPrice;
     private String category;
     private Integer itemCondition; // 1全新 2良好 3一般
-    private Integer itemStatus;    // 1上架 2下架 3已售出
+    private Integer status;    // 1上架 2下架 3已售出
     private Long sellerId;
     private String contactWay;
     private String itemLocation;
@@ -78,12 +78,12 @@ public class Item {
         this.itemCondition = itemCondition;
     }
 
-    public Integer getItemStatus() {
-        return itemStatus;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setItemStatus(Integer itemStatus) {
-        this.itemStatus = itemStatus;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getSellerId() {

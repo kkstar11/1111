@@ -23,5 +23,7 @@ public interface ItemMapper {
     List<Item> findBySeller(@Param("sellerId") Long sellerId);
 
     List<Item> findByCategory(@Param("category") String category);
+
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 }
 

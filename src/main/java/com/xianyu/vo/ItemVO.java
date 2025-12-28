@@ -11,8 +11,11 @@ public class ItemVO {
     private BigDecimal originalPrice;
     private String category;
     private Integer itemCondition;
-    private Integer itemStatus;
+    private Integer status;
     private Long ownerId;
+    private String contactWay;
+    private String itemLocation;
+    private String imageUrls;
 
     public Long getId() {
         return id;
@@ -70,12 +73,12 @@ public class ItemVO {
         this.itemCondition = itemCondition;
     }
 
-    public Integer getItemStatus() {
-        return itemStatus;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setItemStatus(Integer itemStatus) {
-        this.itemStatus = itemStatus;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getOwnerId() {
@@ -84,6 +87,30 @@ public class ItemVO {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getContactWay() {
+        return contactWay;
+    }
+
+    public void setContactWay(String contactWay) {
+        this.contactWay = contactWay;
+    }
+
+    public String getItemLocation() {
+        return itemLocation;
+    }
+
+    public void setItemLocation(String itemLocation) {
+        this.itemLocation = itemLocation;
+    }
+
+    public String getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
 
