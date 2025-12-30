@@ -12,8 +12,8 @@ public class UserVO {
     private String phone;
     private String major;
     private String grade;
-    private Integer userStatus;
-    private Integer userRole;
+    private Integer status;
+    private Integer role;
 
     // getter/setter
     public Long getId() { return id; }
@@ -38,10 +38,10 @@ public class UserVO {
     public void setMajor(String major) { this.major = major; }
     public String getGrade() { return grade; }
     public void setGrade(String grade) { this.grade = grade; }
-    public Integer getUserStatus() { return userStatus; }
-    public void setUserStatus(Integer userStatus) { this.userStatus = userStatus; }
-    public Integer getUserRole() { return userRole; }
-    public void setUserRole(Integer userRole) { this.userRole = userRole; }
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
+    public Integer getRole() { return role; }
+    public void setRole(Integer role) { this.role = role; }
 
     @Override
     public String toString() {
@@ -56,8 +56,8 @@ public class UserVO {
                 ", phone='" + phone + '\'' +
                 ", major='" + major + '\'' +
                 ", grade='" + grade + '\'' +
-                ", userStatus=" + userStatus +
-                ", userRole=" + userRole +
+                ", status=" + status +
+                ", role=" + role +
                 '}';
     }
 }

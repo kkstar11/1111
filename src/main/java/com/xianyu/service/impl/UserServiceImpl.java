@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
         System.out.println("[REGISTER] 原始密码: " + dto.getPassword() + " 加密后: " + encodedPwd);
         user.setPassword(encodedPwd);
         user.setEmail(dto.getEmail());
-        user.setUserStatus(1);
-        user.setUserRole(0);
+        user.setStatus(1);
+        user.setRole(0);
 
         userMapper.insert(user);
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("[LOGIN] 密码不匹配！");
             return Optional.empty();
         }
-        if (user.getUserStatus() != null && user.getUserStatus() == 0) {
+        if (user.getStatus() != null && user.getStatus() == 0) {
             System.out.println("[LOGIN] 用户被禁用！");
             return Optional.empty();
         }

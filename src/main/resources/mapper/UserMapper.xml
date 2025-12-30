@@ -14,15 +14,15 @@
         <result property="major" column="major"/>
         <result property="grade" column="grade"/>
         <result property="avatarUrl" column="avatar_url"/>
-        <result property="userStatus" column="user_status"/>
-        <result property="userRole" column="user_role"/>
+        <result property="status" column="status"/>
+        <result property="role" column="role"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO student_user (student_id, username, password, real_name, phone, email, college, major, grade, avatar_url, user_status, user_role)
-        VALUES (#{studentId}, #{username}, #{password}, #{realName}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{avatarUrl}, #{userStatus}, #{userRole})
+        INSERT INTO student_user (student_id, username, password, real_name, phone, email, college, major, grade, avatar_url, status, role)
+        VALUES (#{studentId}, #{username}, #{password}, #{realName}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{avatarUrl}, #{status}, #{role})
     </insert>
 
     <select id="findById" resultMap="UserMap">

@@ -15,8 +15,8 @@ public class User {
     private String major;
     private String grade;
     private String avatarUrl;
-    private Integer userStatus; // 1正常 0禁用
-    private Integer userRole;   // 0普通用户 1管理员
+    private Integer status; // 1正常 0禁用
+    private Integer role;   // 0普通用户 1管理员
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
@@ -108,20 +108,20 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public Integer getUserStatus() {
-        return userStatus;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public Integer getUserRole() {
-        return userRole;
+    public Integer getRole() {
+        return role;
     }
 
-    public void setUserRole(Integer userRole) {
-        this.userRole = userRole;
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public LocalDateTime getCreateTime() {
