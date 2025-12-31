@@ -17,6 +17,21 @@
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+        /* Navigation hover effects */
+        .navbar-nav .nav-item .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .navbar-nav .nav-item .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -31,12 +46,6 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">首页</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login.html">登录</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/register.html">注册</a>
                     </li>
                 </ul>
             </div>
