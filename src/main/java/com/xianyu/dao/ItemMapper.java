@@ -25,5 +25,7 @@ public interface ItemMapper {
     List<Item> findByCategory(@Param("category") String category);
 
     int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    List<Item> findByStatus(@Param("status") Integer status);
 }
 

@@ -172,6 +172,18 @@
                 </a>
             </div>
 
+            <div class="col-md-4 col-sm-6" th:if="${user != null and user.role == 1}">
+                <a href="/admin.html" class="text-decoration-none">
+                    <div class="card menu-card text-center h-100">
+                        <div class="card-body">
+                            <div class="menu-icon text-warning">🛡️</div>
+                            <h5 class="card-title">管理后台</h5>
+                            <p class="card-text text-muted">管理用户和审核商品</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
             <div class="col-md-4 col-sm-6" th:if="${user != null}">
                 <div class="card menu-card text-center h-100" onclick="logout()">
                     <div class="card-body">

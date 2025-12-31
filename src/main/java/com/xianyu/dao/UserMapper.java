@@ -19,5 +19,7 @@ public interface UserMapper {
     Optional<User> findByStudentId(@Param("studentId") String studentId);
 
     List<User> findAll();
+
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 }
 

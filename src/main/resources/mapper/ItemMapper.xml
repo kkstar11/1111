@@ -69,5 +69,9 @@
         SET status = #{status}, update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>
+
+    <select id="findByStatus" resultMap="ItemMap">
+        SELECT * FROM item WHERE status = #{status} ORDER BY create_time DESC
+    </select>
 </mapper>
 

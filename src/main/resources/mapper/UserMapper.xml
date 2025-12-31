@@ -40,5 +40,11 @@
     <select id="findAll" resultMap="UserMap">
         SELECT * FROM student_user ORDER BY create_time DESC
     </select>
+
+    <update id="updateStatus">
+        UPDATE student_user
+        SET status = #{status}, update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
 </mapper>
 
