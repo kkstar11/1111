@@ -147,7 +147,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public boolean updateStatus(Long id, Integer status, Long ownerId) {
         // 验证status值是否合法（0-4之间）
-        if (status == null || status < 0 || status > 4) {
+        if (status == null || status < 0 || status > STATUS_REJECTED) {
             return false;
         }
         // 查询商品是否存在，并验证是否为所有者
@@ -172,10 +172,12 @@ public class ItemServiceImpl implements ItemService {
             }
             
             // 普通用户只能在上架(1)和下架(3)之间切换
-            if (currentStatus == STATUS_ON_SALE && status != STATUS_OFF_SALE) {
-                return false;
-            }
-            if (currentStatus == STATUS_OFF_SALE && status != STATUS_ON_SALE) {
+            // 允许的转换: 1→3, 3→1, 或保持不变(1→1, 3→3)
+            boolean isValidTransition = 
+                (currentStatus == STATUS_ON_SALE && (status == STATUS_ON_SALE || status == STATUS_OFF_SALE)) ||
+                (currentStatus == STATUS_OFF_SALE && (status == STATUS_ON_SALE || status == STATUS_OFF_SALE));
+            
+            if (!isValidTransition) {
                 return false;
             }
         }
