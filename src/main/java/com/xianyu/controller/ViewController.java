@@ -1,5 +1,6 @@
 package com.xianyu.controller;
 
+import com.xianyu.dto.ItemDTO;
 import com.xianyu.security.MyUserDetails;
 import com.xianyu.service.FavoriteService;
 import com.xianyu.service.ItemService;
@@ -10,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
@@ -57,6 +60,23 @@ public class ViewController {
             itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
         }
         return "item-edit";
+    }
+
+    @PostMapping("/item-edit.html")
+    public String saveItemEdit(@ModelAttribute ItemDTO itemDTO, 
+                               @AuthenticationPrincipal MyUserDetails userDetails,
+                               Model model) {
+        if (userDetails == null) {
+            return "redirect:/login.html";
+        }
+        Long ownerId = userDetails.getUserVO().getId();
+        // 判断是新建还是编辑
+        if (itemDTO.getId() == null) {
+            itemService.create(itemDTO, ownerId);
+        } else {
+            itemService.update(itemDTO.getId(), itemDTO, ownerId);
+        }
+        return "redirect:/my-orders.html";
     }
 
     // 登录页

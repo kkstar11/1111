@@ -135,8 +135,8 @@
                         <div class="alert alert-danger" id="errorAlert" style="display: none;"></div>
                         <div class="alert alert-success" id="successAlert" style="display: none;"></div>
                         
-                        <form id="itemForm">
-                            <input type="hidden" id="itemId" th:value="${item?.id}" />
+                        <form id="itemForm" method="post" action="/item-edit.html">
+                            <input type="hidden" id="itemId" name="id" th:value="${item?.id}" />
                             
                             <div class="mb-3">
                                 <label for="title" class="form-label">商品标题 <span class="text-danger">*</span></label>
