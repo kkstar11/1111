@@ -97,8 +97,9 @@ public class UserServiceImpl implements UserService {
         vo.setId(user.getId());
         vo.setUsername(user.getUsername());
         vo.setEmail(user.getEmail());
-        // 必须带 password
         vo.setPassword(user.getPassword());
+        vo.setRole(user.getRole());  // 添加角色字段映射
+        vo.setStatus(user.getStatus());  // 添加状态字段映射
         // 有需要可拷贝更多字段
         return vo;
     }

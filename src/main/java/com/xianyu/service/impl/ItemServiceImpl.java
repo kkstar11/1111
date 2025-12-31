@@ -17,9 +17,11 @@ public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
 
     // 商品状态常量
+    private static final int STATUS_PENDING = 0;    // 待审核
     private static final int STATUS_ON_SALE = 1;    // 上架
     private static final int STATUS_OFF_SALE = 2;   // 下架
     private static final int STATUS_SOLD = 3;       // 已售出
+    private static final int STATUS_REJECTED = 4;   // 审核驳回
 
     public ItemServiceImpl(ItemMapper itemMapper) {
         this.itemMapper = itemMapper;
@@ -35,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
         item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
         item.setConditions(dto.getConditions() != null ? dto.getConditions() : 2);
-        item.setStatus(STATUS_ON_SALE);
+        item.setStatus(STATUS_PENDING);  // 新创建的商品设置为待审核状态
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
         item.setLocation(dto.getLocation());
