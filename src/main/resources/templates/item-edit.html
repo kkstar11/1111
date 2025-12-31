@@ -174,12 +174,12 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label for="itemCondition" class="form-label">商品成色 <span class="text-danger">*</span></label>
-                                <select class="form-select" id="itemCondition" name="itemCondition" required>
+                                <label for="conditions" class="form-label">商品成色 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="conditions" name="conditions" required>
                                     <option value="">请选择成色</option>
-                                    <option value="1" th:selected="${item?.itemCondition == 1}">全新</option>
-                                    <option value="2" th:selected="${item?.itemCondition == 2}">良好</option>
-                                    <option value="3" th:selected="${item?.itemCondition == 3}">一般</option>
+                                    <option value="1" th:selected="${item?.conditions == 1}">全新</option>
+                                    <option value="2" th:selected="${item?.conditions == 2}">良好</option>
+                                    <option value="3" th:selected="${item?.conditions == 3}">一般</option>
                                 </select>
                             </div>
                             
@@ -427,7 +427,7 @@
                 price: parseFloat($('#price').val()),
                 originalPrice: $('#originalPrice').val() ? parseFloat($('#originalPrice').val()) : null,
                 category: $('#category').val(),
-                itemCondition: parseInt($('#itemCondition').val()),
+                conditions: parseInt($('#conditions').val()),
                 itemLocation: $('#itemLocation').val(),
                 contactWay: $('#contactWay').val(),
                 imageUrls: $('#imageUrls').val()
