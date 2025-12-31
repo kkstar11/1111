@@ -117,14 +117,13 @@
                     }
                 },
                 error: function(xhr) {
-                    const response = xhr.responseJSON;
-                    
-                    // 处理未登录情况
-                    if (response && response.message === 'unauthorized') {
+                    // 处理未登录情况 - 检查状态码或消息
+                    if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
                         alert('请先登录后再收藏商品');
                         window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname);
                     } else {
-                        alert('收藏失败：' + (response?.message || '网络错误，请稍后重试'));
+                        const response = xhr.responseJSON;
+                        alert('收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
                         $btn.prop('disabled', false);
                     }
                 }
