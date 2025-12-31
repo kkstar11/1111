@@ -155,20 +155,31 @@ public class ItemServiceImpl implements ItemService {
         if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
             return false;
         }
-        // 普通用户只允许在"上架"(1)和"下架"(3)之间切换
-        // 不允许修改已售出(2)、待审核(0)、审核驳回(4)的商品状态
+        
         if (existing.getStatus() != null) {
             int currentStatus = existing.getStatus();
+            
             // 已售出的商品不允许修改状态
             if (currentStatus == STATUS_SOLD) {
                 return false;
             }
-            // 普通用户只能在上架和下架之间切换
-            if ((currentStatus == STATUS_ON_SALE && status != STATUS_OFF_SALE) ||
-                (currentStatus == STATUS_OFF_SALE && status != STATUS_ON_SALE)) {
+            
+            // 待审核和被驳回的商品不允许用户自行修改状态
+            // 待审核商品需要等待管理员审核
+            // 被驳回商品需要删除后重新发布
+            if (currentStatus == STATUS_PENDING || currentStatus == STATUS_REJECTED) {
+                return false;
+            }
+            
+            // 普通用户只能在上架(1)和下架(3)之间切换
+            if (currentStatus == STATUS_ON_SALE && status != STATUS_OFF_SALE) {
+                return false;
+            }
+            if (currentStatus == STATUS_OFF_SALE && status != STATUS_ON_SALE) {
                 return false;
             }
         }
+        
         // 更新状态
         int updated = itemMapper.updateStatus(id, status);
         return updated > 0;
