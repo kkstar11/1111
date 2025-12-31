@@ -2,8 +2,10 @@ package com.xianyu.service.impl;
 
 import com.xianyu.dao.FavoriteMapper;
 import com.xianyu.entity.Favorite;
+import com.xianyu.entity.Item;
 import com.xianyu.service.FavoriteService;
 import com.xianyu.vo.FavoriteVO;
+import com.xianyu.vo.ItemVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +51,30 @@ public class FavoriteServiceImpl implements FavoriteService {
         vo.setId(favorite.getId());
         vo.setUserId(favorite.getUserId());
         vo.setItemId(favorite.getItemId());
+        vo.setCreateTime(favorite.getCreateTime());
+        
+        // Convert associated Item to ItemVO if present
+        if (favorite.getItem() != null) {
+            vo.setItem(toItemVO(favorite.getItem()));
+        }
+        
+        return vo;
+    }
+
+    private ItemVO toItemVO(Item item) {
+        ItemVO vo = new ItemVO();
+        vo.setId(item.getId());
+        vo.setName(item.getTitle());
+        vo.setDescription(item.getDescription());
+        vo.setPrice(item.getPrice());
+        vo.setOriginalPrice(item.getOriginalPrice());
+        vo.setCategory(item.getCategory());
+        vo.setConditions(item.getConditions());
+        vo.setStatus(item.getStatus());
+        vo.setOwnerId(item.getSellerId());
+        vo.setContactWay(item.getContactWay());
+        vo.setLocation(item.getLocation());
+        vo.setImageUrls(item.getImageUrls());
         return vo;
     }
 }

@@ -102,6 +102,9 @@
                                 <div class="col">
                                     <h5 class="mb-1" th:text="${favorite.item?.name}">商品标题</h5>
                                     <p class="text-muted mb-2" th:text="${favorite.item?.description}">商品描述</p>
+                                    <p class="text-muted small mb-0" th:if="${favorite.createTime != null}">
+                                        收藏时间: <span th:text="${#temporals.format(favorite.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                    </p>
                                     <!-- 分类字段无，先隐藏 -->
                                     <!-- <span class="badge bg-info" th:text="${favorite.item?.category}">分类</span> -->
                                 </div>

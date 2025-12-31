@@ -104,42 +104,94 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(document).ready(function() {
+        const itemId = $('#favoriteBtn').data('item-id');
+        
+        // Check if item is already favorited on page load
+        $.ajax({
+            url: '/api/favorites/check',
+            method: 'GET',
+            data: { itemId: itemId },
+            success: function(response) {
+                if (response.success && response.data === true) {
+                    $('#favoriteText').text('已收藏');
+                    $('#favoriteBtn').data('favorited', true);
+                } else {
+                    $('#favoriteText').text('收藏商品');
+                    $('#favoriteBtn').data('favorited', false);
+                }
+            },
+            error: function() {
+                // If check fails, assume not favorited
+                $('#favoriteText').text('收藏商品');
+                $('#favoriteBtn').data('favorited', false);
+            }
+        });
+        
         $('#favoriteBtn').click(function(e) {
             e.preventDefault();
             
-            const itemId = $(this).data('item-id');
             const $btn = $(this);
             const $btnText = $('#favoriteText');
+            const isFavorited = $btn.data('favorited');
             
-            // 禁用按钮防止重复点击
+            // Disable button to prevent double clicks
             $btn.prop('disabled', true);
             
-            $.ajax({
-                url: '/api/favorites',
-                method: 'POST',
-                data: { itemId: itemId },
-                success: function(response) {
-                    if (response.success) {
-                        alert('收藏成功！');
-                        $btnText.text('已收藏');
-                        // 保持按钮禁用状态
-                    } else {
-                        alert('收藏失败：' + (response.message || '未知错误'));
+            if (isFavorited) {
+                // Remove favorite
+                $.ajax({
+                    url: '/api/favorites',
+                    method: 'DELETE',
+                    data: { itemId: itemId },
+                    success: function(response) {
+                        if (response.success) {
+                            $btnText.text('收藏商品');
+                            $btn.data('favorited', false);
+                            alert('已取消收藏');
+                        } else {
+                            alert('取消收藏失败：' + (response.message || '未知错误'));
+                        }
+                        $btn.prop('disabled', false);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
+                            alert('请先登录');
+                            window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        } else {
+                            const response = xhr.responseJSON;
+                            alert('取消收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
+                        }
                         $btn.prop('disabled', false);
                     }
-                },
-                error: function(xhr) {
-                    // 处理未登录情况 - 检查状态码或消息
-                    if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
-                        alert('请先登录后再收藏商品');
-                        window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname);
-                    } else {
-                        const response = xhr.responseJSON;
-                        alert('收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
+                });
+            } else {
+                // Add favorite
+                $.ajax({
+                    url: '/api/favorites',
+                    method: 'POST',
+                    data: { itemId: itemId },
+                    success: function(response) {
+                        if (response.success) {
+                            $btnText.text('已收藏');
+                            $btn.data('favorited', true);
+                            alert('收藏成功！');
+                        } else {
+                            alert('收藏失败：' + (response.message || '未知错误'));
+                        }
+                        $btn.prop('disabled', false);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
+                            alert('请先登录后再收藏商品');
+                            window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        } else {
+                            const response = xhr.responseJSON;
+                            alert('收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
+                        }
                         $btn.prop('disabled', false);
                     }
-                }
-            });
+                });
+            }
         });
     });
 </script>
