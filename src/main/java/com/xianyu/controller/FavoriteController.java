@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -48,6 +49,16 @@ public class FavoriteController {
             return Result.failure("unauthorized");
         }
         return Result.success(favoriteService.listByUser(userId));
+    }
+
+    @GetMapping("/check")
+    public Result<Boolean> check(@RequestParam Long itemId, HttpSession session) {
+        Long userId = currentUserId(session);
+        if (userId == null) {
+            return Result.success(false);
+        }
+        boolean isFavorited = favoriteService.findByUserAndItem(userId, itemId).isPresent();
+        return Result.success(isFavorited);
     }
 
     private Long currentUserId(HttpSession session) {
