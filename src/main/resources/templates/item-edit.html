@@ -88,6 +88,21 @@
         .image-preview-item .remove-btn:hover {
             background-color: rgba(220, 53, 69, 1);
         }
+        /* Navigation hover effects */
+        .navbar-nav .nav-item .nav-link {
+            position: relative;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .navbar-nav .nav-item .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -105,9 +120,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="/item-edit.html">发布商品</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/my-orders.html">我的订单</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/user-center.html">个人中心</a>
