@@ -148,6 +148,18 @@
                 </a>
             </div>
 
+            <div class="col-md-4 col-sm-6" th:if="${user != null}">
+                <a href="/my-orders.html" class="text-decoration-none">
+                    <div class="card menu-card text-center h-100">
+                        <div class="card-body">
+                            <div class="menu-icon text-success">📦</div>
+                            <h5 class="card-title">我的订单</h5>
+                            <p class="card-text text-muted">管理我的订单信息</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
             <div class="col-md-4 col-sm-6" th:if="${user == null}">
                 <a href="/login.html" class="text-decoration-none">
                     <div class="card menu-card text-center h-100">
