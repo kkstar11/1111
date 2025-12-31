@@ -10,7 +10,7 @@ public class ItemVO {
     private BigDecimal price;
     private BigDecimal originalPrice;
     private String category;
-    private Integer itemCondition;
+    private Integer conditions;
     private Integer status;
     private Long ownerId;
     private String contactWay;
@@ -65,12 +65,12 @@ public class ItemVO {
         this.category = category;
     }
 
-    public Integer getItemCondition() {
-        return itemCondition;
+    public Integer getConditions() {
+        return conditions;
     }
 
-    public void setItemCondition(Integer itemCondition) {
-        this.itemCondition = itemCondition;
+    public void setConditions(Integer conditions) {
+        this.conditions = conditions;
     }
 
     public Integer getStatus() {

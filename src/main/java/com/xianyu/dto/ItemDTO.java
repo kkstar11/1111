@@ -9,7 +9,7 @@ public class ItemDTO {
     private BigDecimal price;
     private BigDecimal originalPrice;
     private String category;
-    private Integer itemCondition;
+    private Integer conditions;
     private String contactWay;
     private String itemLocation;
     private String imageUrls;
@@ -55,12 +55,12 @@ public class ItemDTO {
         this.category = category;
     }
 
-    public Integer getItemCondition() {
-        return itemCondition;
+    public Integer getConditions() {
+        return conditions;
     }
 
-    public void setItemCondition(Integer itemCondition) {
-        this.itemCondition = itemCondition;
+    public void setConditions(Integer conditions) {
+        this.conditions = conditions;
     }
 
     public String getContactWay() {

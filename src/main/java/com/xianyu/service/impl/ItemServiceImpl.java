@@ -34,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
         item.setPrice(dto.getPrice());
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
         item.setCategory(dto.getCategory() != null ? dto.getCategory() : "default");
-        item.setItemCondition(dto.getItemCondition() != null ? dto.getItemCondition() : 2);
+        item.setConditions(dto.getConditions() != null ? dto.getConditions() : 2);
         item.setStatus(STATUS_ON_SALE);
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
@@ -62,8 +62,8 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getCategory() != null) {
             existing.setCategory(dto.getCategory());
         }
-        if (dto.getItemCondition() != null) {
-            existing.setItemCondition(dto.getItemCondition());
+        if (dto.getConditions() != null) {
+            existing.setConditions(dto.getConditions());
         }
         if (dto.getStatus() != null) {
             existing.setStatus(dto.getStatus());
@@ -121,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
         vo.setPrice(item.getPrice());
         vo.setOriginalPrice(item.getOriginalPrice());
         vo.setCategory(item.getCategory());
-        vo.setItemCondition(item.getItemCondition());
+        vo.setConditions(item.getConditions());
         vo.setStatus(item.getStatus());
         vo.setOwnerId(item.getSellerId());
         vo.setContactWay(item.getContactWay());

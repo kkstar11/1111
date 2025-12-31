@@ -11,7 +11,7 @@ public class Item {
     private BigDecimal price;
     private BigDecimal originalPrice;
     private String category;
-    private Integer itemCondition; // 1全新 2良好 3一般
+    private Integer conditions; // 1全新 2良好 3一般
     private Integer status;    // 1上架 2下架 3已售出
     private Long sellerId;
     private String contactWay;
@@ -70,12 +70,12 @@ public class Item {
         this.category = category;
     }
 
-    public Integer getItemCondition() {
-        return itemCondition;
+    public Integer getConditions() {
+        return conditions;
     }
 
-    public void setItemCondition(Integer itemCondition) {
-        this.itemCondition = itemCondition;
+    public void setConditions(Integer conditions) {
+        this.conditions = conditions;
     }
 
     public Integer getStatus() {
