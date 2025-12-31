@@ -32,7 +32,7 @@ public class ViewController {
     // 首页/商品列表
     @GetMapping({"/", "/index.html", "/index"})
     public String index(Model model) {
-        model.addAttribute("items", itemService.listAll());
+        model.addAttribute("items", itemService.listOnSale());
         return "index";
     }
 
