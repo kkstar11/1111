@@ -64,6 +64,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     private ItemVO toItemVO(Item item) {
         ItemVO vo = new ItemVO();
         vo.setId(item.getId());
+        // Note: Item entity uses 'title' field, ItemVO uses 'name' for consistency with API
         vo.setName(item.getTitle());
         vo.setDescription(item.getDescription());
         vo.setPrice(item.getPrice());

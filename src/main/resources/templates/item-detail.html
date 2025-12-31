@@ -106,6 +106,11 @@
     $(document).ready(function() {
         const itemId = $('#favoriteBtn').data('item-id');
         
+        // Helper function to build login redirect URL
+        function getLoginRedirectUrl() {
+            return '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
+        }
+        
         // Check if item is already favorited on page load
         $.ajax({
             url: '/api/favorites/check',
@@ -156,7 +161,7 @@
                     error: function(xhr) {
                         if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
                             alert('请先登录');
-                            window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
+                            window.location.href = getLoginRedirectUrl();
                         } else {
                             const response = xhr.responseJSON;
                             alert('取消收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
@@ -183,7 +188,7 @@
                     error: function(xhr) {
                         if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
                             alert('请先登录后再收藏商品');
-                            window.location.href = '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
+                            window.location.href = getLoginRedirectUrl();
                         } else {
                             const response = xhr.responseJSON;
                             alert('收藏失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
