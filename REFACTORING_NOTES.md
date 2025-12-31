@@ -45,7 +45,7 @@
 ### 7. ItemVO 字段扩充
 为支持前端显示需求，在 ItemVO 中添加了以下字段：
 - `contactWay`: 联系方式
-- `itemLocation`: 商品位置
+- `location`: 商品位置
 - `imageUrls`: 图片 URL
 
 ## 状态值说明

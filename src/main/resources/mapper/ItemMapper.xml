@@ -13,7 +13,7 @@
         <result property="status" column="status"/>
         <result property="sellerId" column="seller_id"/>
         <result property="contactWay" column="contact_way"/>
-        <result property="itemLocation" column="item_location"/>
+        <result property="location" column="location"/>
         <result property="imageUrls" column="image_urls"/>
         <result property="viewCount" column="view_count"/>
         <result property="likeCount" column="like_count"/>
@@ -22,8 +22,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.Item" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO item (title, description, price, original_price, category, conditions, status, seller_id, contact_way, item_location, image_urls, view_count, like_count)
-        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{conditions}, #{status}, #{sellerId}, #{contactWay}, #{itemLocation}, #{imageUrls}, #{viewCount}, #{likeCount})
+        INSERT INTO item (title, description, price, original_price, category, conditions, status, seller_id, contact_way, location, image_urls, view_count, like_count)
+        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{conditions}, #{status}, #{sellerId}, #{contactWay}, #{location}, #{imageUrls}, #{viewCount}, #{likeCount})
     </insert>
 
     <update id="update" parameterType="com.xianyu.entity.Item">
@@ -36,7 +36,7 @@
             conditions = #{conditions},
             status = #{status},
             contact_way = #{contactWay},
-            item_location = #{itemLocation},
+            location = #{location},
             image_urls = #{imageUrls},
             view_count = #{viewCount},
             like_count = #{likeCount},

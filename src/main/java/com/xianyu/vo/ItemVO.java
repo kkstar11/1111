@@ -14,7 +14,7 @@ public class ItemVO {
     private Integer status;
     private Long ownerId;
     private String contactWay;
-    private String itemLocation;
+    private String location;
     private String imageUrls;
 
     public Long getId() {
@@ -97,12 +97,12 @@ public class ItemVO {
         this.contactWay = contactWay;
     }
 
-    public String getItemLocation() {
-        return itemLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setItemLocation(String itemLocation) {
-        this.itemLocation = itemLocation;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getImageUrls() {
