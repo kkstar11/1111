@@ -99,4 +99,15 @@ public class ViewController {
         }
         return "user-center";
     }
+
+    @GetMapping("/admin.html")
+    public String admin(@AuthenticationPrincipal MyUserDetails userDetails) {
+        // 检查是否为管理员
+        if (userDetails == null || userDetails.getUserVO() == null 
+                || userDetails.getUserVO().getRole() == null 
+                || userDetails.getUserVO().getRole() != 1) {
+            return "redirect:/index.html";  // 非管理员重定向到首页
+        }
+        return "admin";
+    }
 }

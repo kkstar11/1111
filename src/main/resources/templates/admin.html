@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 - 闲鱼二手交易平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background-color: #ff6600;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+        }
+        .nav {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .nav a {
+            color: #ff6600;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #ff6600;
+            border-bottom: 2px solid #ff6600;
+            padding-bottom: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            color: #555;
+        }
+        tr:hover {
+            background-color: #fafafa;
+        }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        .btn-enable {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-enable:hover {
+            background-color: #45a049;
+        }
+        .btn-disable {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-disable:hover {
+            background-color: #da190b;
+        }
+        .btn-approve {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-approve:hover {
+            background-color: #0b7dda;
+        }
+        .btn-reject {
+            background-color: #ff9800;
+            color: white;
+        }
+        .btn-reject:hover {
+            background-color: #e68900;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-active {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+        .badge-disabled {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+        .badge-pending {
+            background-color: #fff3e0;
+            color: #ff9800;
+        }
+        .badge-admin {
+            background-color: #e3f2fd;
+            color: #2196f3;
+        }
+        .badge-user {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ 管理员后台</h1>
+    </div>
+
+    <div class="nav">
+        <a href="/index.html">← 返回首页</a>
+        <a href="/user-center.html">个人中心</a>
+    </div>
+
+    <div class="container">
+        <!-- 用户管理区域 -->
+        <div class="section">
+            <h2 class="section-title">👥 用户账号管理</h2>
+            <div id="userLoading" class="loading">加载中...</div>
+            <div id="userContent" style="display: none;">
+                <table id="userTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>学号</th>
+                            <th>邮箱</th>
+                            <th>角色</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="userEmpty" class="empty-message" style="display: none;">
+                暂无用户数据
+            </div>
+        </div>
+
+        <!-- 商品审核区域 -->
+        <div class="section">
+            <h2 class="section-title">📦 待审核商品管理</h2>
+            <div id="itemLoading" class="loading">加载中...</div>
+            <div id="itemContent" style="display: none;">
+                <table id="itemTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>商品名称</th>
+                            <th>价格</th>
+                            <th>分类</th>
+                            <th>卖家ID</th>
+                            <th>发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemTableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="itemEmpty" class="empty-message" style="display: none;">
+                暂无待审核商品
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时获取数据
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+            loadPendingItems();
+        });
+
+        // 加载用户列表
+        function loadUsers() {
+            fetch('/api/admin/users', {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('userLoading').style.display = 'none';
+                if (result.success && result.data && result.data.length > 0) {
+                    document.getElementById('userContent').style.display = 'block';
+                    renderUserTable(result.data);
+                } else {
+                    document.getElementById('userEmpty').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                document.getElementById('userLoading').style.display = 'none';
+                document.getElementById('userEmpty').style.display = 'block';
+                console.error('加载用户列表失败:', error);
+                alert('加载用户列表失败，请确保您有管理员权限');
+            });
+        }
+
+        // 渲染用户表格
+        function renderUserTable(users) {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                const roleText = user.role === 1 ? '<span class="badge badge-admin">管理员</span>' : '<span class="badge badge-user">普通用户</span>';
+                const statusText = user.status === 1 ? '<span class="badge badge-active">正常</span>' : '<span class="badge badge-disabled">禁用</span>';
+                const actionBtn = user.status === 1 
+                    ? `<button class="btn btn-disable" onclick="updateUserStatus(${user.id}, 0)">禁用</button>`
+                    : `<button class="btn btn-enable" onclick="updateUserStatus(${user.id}, 1)">启用</button>`;
+                
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username || '-'}</td>
+                    <td>${user.studentId || '-'}</td>
+                    <td>${user.email || '-'}</td>
+                    <td>${roleText}</td>
+                    <td>${statusText}</td>
+                    <td>${actionBtn}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 更新用户状态
+        function updateUserStatus(userId, status) {
+            const action = status === 1 ? '启用' : '禁用';
+            if (!confirm(`确定要${action}该用户吗？`)) {
+                return;
+            }
+
+            fetch(`/api/admin/users/${userId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ status: status })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(`${action}成功！`);
+                    loadUsers(); // 重新加载用户列表
+                } else {
+                    alert(`${action}失败: ${result.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('更新用户状态失败:', error);
+                alert(`${action}失败，请重试`);
+            });
+        }
+
+        // 加载待审核商品列表
+        function loadPendingItems() {
+            fetch('/api/admin/items/pending', {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('itemLoading').style.display = 'none';
+                if (result.success && result.data && result.data.length > 0) {
+                    document.getElementById('itemContent').style.display = 'block';
+                    renderItemTable(result.data);
+                } else {
+                    document.getElementById('itemEmpty').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                document.getElementById('itemLoading').style.display = 'none';
+                document.getElementById('itemEmpty').style.display = 'block';
+                console.error('加载待审核商品失败:', error);
+                alert('加载待审核商品失败，请确保您有管理员权限');
+            });
+        }
+
+        // 渲染商品表格
+        function renderItemTable(items) {
+            const tbody = document.getElementById('itemTableBody');
+            tbody.innerHTML = '';
+            items.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.name || '-'}</td>
+                    <td>¥${item.price || 0}</td>
+                    <td>${item.category || '-'}</td>
+                    <td>${item.ownerId || '-'}</td>
+                    <td>-</td>
+                    <td>
+                        <button class="btn btn-approve" onclick="approveItem(${item.id})">通过</button>
+                        <button class="btn btn-reject" onclick="rejectItem(${item.id})">驳回</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 审核通过商品
+        function approveItem(itemId) {
+            if (!confirm('确定要通过该商品的审核吗？')) {
+                return;
+            }
+
+            fetch(`/api/admin/items/${itemId}/approve`, {
+                method: 'PUT',
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('审核通过！');
+                    loadPendingItems(); // 重新加载待审核商品列表
+                } else {
+                    alert(`审核失败: ${result.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('审核商品失败:', error);
+                alert('审核失败，请重试');
+            });
+        }
+
+        // 驳回商品
+        function rejectItem(itemId) {
+            if (!confirm('确定要驳回该商品吗？')) {
+                return;
+            }
+
+            fetch(`/api/admin/items/${itemId}/reject`, {
+                method: 'PUT',
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('商品已驳回！');
+                    loadPendingItems(); // 重新加载待审核商品列表
+                } else {
+                    alert(`驳回失败: ${result.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('驳回商品失败:', error);
+                alert('驳回失败，请重试');
+            });
+        }
+    </script>
+</body>
+</html>
