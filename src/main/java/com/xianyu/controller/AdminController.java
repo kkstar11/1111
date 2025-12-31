@@ -121,6 +121,7 @@ public class AdminController {
         vo.setGrade(user.getGrade());
         vo.setStatus(user.getStatus());
         vo.setRole(user.getRole());
+        // 不设置password，避免密码哈希泄露
         return vo;
     }
 
