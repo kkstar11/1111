@@ -15,7 +15,7 @@ public class Item {
     private Integer status;    // 1上架 2下架 3已售出
     private Long sellerId;
     private String contactWay;
-    private String itemLocation;
+    private String location;
     private String imageUrls;
     private Integer viewCount;
     private Integer likeCount;
@@ -102,12 +102,12 @@ public class Item {
         this.contactWay = contactWay;
     }
 
-    public String getItemLocation() {
-        return itemLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setItemLocation(String itemLocation) {
-        this.itemLocation = itemLocation;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getImageUrls() {

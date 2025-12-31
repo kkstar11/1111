@@ -193,9 +193,9 @@
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="itemLocation" class="form-label">交易地点</label>
-                                    <input type="text" class="form-control" id="itemLocation" name="itemLocation" 
-                                           th:value="${item?.itemLocation}"
+                                    <label for="location" class="form-label">交易地点</label>
+                                    <input type="text" class="form-control" id="location" name="location" 
+                                           th:value="${item?.location}"
                                            placeholder="例如：北京市海淀区" />
                                 </div>
                                 
@@ -428,7 +428,7 @@
                 originalPrice: $('#originalPrice').val() ? parseFloat($('#originalPrice').val()) : null,
                 category: $('#category').val(),
                 conditions: parseInt($('#conditions').val()),
-                itemLocation: $('#itemLocation').val(),
+                location: $('#location').val(),
                 contactWay: $('#contactWay').val(),
                 imageUrls: $('#imageUrls').val()
             };

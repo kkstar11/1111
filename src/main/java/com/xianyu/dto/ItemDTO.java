@@ -11,7 +11,7 @@ public class ItemDTO {
     private String category;
     private Integer conditions;
     private String contactWay;
-    private String itemLocation;
+    private String location;
     private String imageUrls;
     private Integer status;
 
@@ -71,12 +71,12 @@ public class ItemDTO {
         this.contactWay = contactWay;
     }
 
-    public String getItemLocation() {
-        return itemLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setItemLocation(String itemLocation) {
-        this.itemLocation = itemLocation;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getImageUrls() {

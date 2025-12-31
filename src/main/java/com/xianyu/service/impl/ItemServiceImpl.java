@@ -38,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
         item.setStatus(STATUS_ON_SALE);
         item.setSellerId(ownerId);
         item.setContactWay(dto.getContactWay());
-        item.setItemLocation(dto.getItemLocation());
+        item.setLocation(dto.getLocation());
         item.setImageUrls(dto.getImageUrls());
         item.setViewCount(0);
         item.setLikeCount(0);
@@ -71,8 +71,8 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getContactWay() != null) {
             existing.setContactWay(dto.getContactWay());
         }
-        if (dto.getItemLocation() != null) {
-            existing.setItemLocation(dto.getItemLocation());
+        if (dto.getLocation() != null) {
+            existing.setLocation(dto.getLocation());
         }
         if (dto.getImageUrls() != null) {
             existing.setImageUrls(dto.getImageUrls());
@@ -125,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
         vo.setStatus(item.getStatus());
         vo.setOwnerId(item.getSellerId());
         vo.setContactWay(item.getContactWay());
-        vo.setItemLocation(item.getItemLocation());
+        vo.setLocation(item.getLocation());
         vo.setImageUrls(item.getImageUrls());
         return vo;
     }
