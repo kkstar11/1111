@@ -1,5 +1,6 @@
 package com.xianyu.config;
 
+import com.xianyu.security.MyUserDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,21 @@ public class SecurityConfig {
                                 "/login.html", "/register.html",
                                 "/api/users/login", "/api/users/register"
                         ).permitAll()
+                        // Admin-only resources - must have ADMIN role (role = 1)
+                        .requestMatchers("/admin.html", "/api/admin/**")
+                        .access((authentication, context) -> {
+                            var authObj = authentication.get();
+                            if (authObj == null || !authObj.isAuthenticated()) {
+                                return new org.springframework.security.authorization.AuthorizationDecision(false);
+                            }
+                            if (authObj.getPrincipal() instanceof MyUserDetails userDetails) {
+                                boolean isAdmin = userDetails.getUserVO() != null 
+                                        && userDetails.getUserVO().getRole() != null 
+                                        && userDetails.getUserVO().getRole() == 1;
+                                return new org.springframework.security.authorization.AuthorizationDecision(isAdmin);
+                            }
+                            return new org.springframework.security.authorization.AuthorizationDecision(false);
+                        })
                         .requestMatchers(
                                 "/item-edit.html",
                                 "/api/items", "/api/items/**",
@@ -40,6 +56,18 @@ public class SecurityConfig {
                                         response.setContentType("application/json;charset=UTF-8");
                                         response.setStatus(401);
                                         response.getWriter().write("{\"error\":\"用户未登录\"}");
+                                    }
+                                }
+                        )
+                        .accessDeniedHandler(
+                                (request, response, accessDeniedException) -> {
+                                    String accept = request.getHeader("Accept");
+                                    if (accept != null && accept.contains("text/html")) {
+                                        response.sendRedirect("/login.html?error=forbidden");
+                                    } else {
+                                        response.setContentType("application/json;charset=UTF-8");
+                                        response.setStatus(403);
+                                        response.getWriter().write("{\"error\":\"无权限访问\"}");
                                     }
                                 }
                         )
