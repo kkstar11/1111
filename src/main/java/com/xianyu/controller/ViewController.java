@@ -31,7 +31,11 @@ public class ViewController {
 
     // 首页/商品列表
     @GetMapping({"/", "/index.html", "/index"})
-    public String index(Model model) {
+    public String index(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
+        // If admin is logged in, redirect to admin panel
+        if (isAdmin(userDetails)) {
+            return "redirect:/admin.html";
+        }
         model.addAttribute("items", itemService.listOnSale());
         return "index";
     }
@@ -39,6 +43,10 @@ public class ViewController {
     // 商品详情页
     @GetMapping("/item-detail.html")
     public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
+        // If admin is logged in, redirect to admin panel
+        if (isAdmin(userDetails)) {
+            return "redirect:/admin.html";
+        }
         itemService.findById(id).ifPresent(item -> {
             model.addAttribute("item", item);
             // 判断当前用户是否为商品发布者
@@ -55,6 +63,10 @@ public class ViewController {
     public String itemEdit(@RequestParam(value = "id", required = false) Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
             return "redirect:/login.html";
+        }
+        // If admin is logged in, redirect to admin panel
+        if (isAdmin(userDetails)) {
+            return "redirect:/admin.html";
         }
         if (id != null) {
             itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
@@ -93,6 +105,10 @@ public class ViewController {
 
     @GetMapping("/my-orders.html")
     public String myOrders(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
+        // If admin is logged in, redirect to admin panel
+        if (isAdmin(userDetails)) {
+            return "redirect:/admin.html";
+        }
         Long userId = null;
         if (userDetails != null) userId = userDetails.getUserVO().getId();
 
@@ -109,11 +125,15 @@ public class ViewController {
     }
 
     @GetMapping("/user-center.html")
-    public String userCenter(Model model) {
+    public String userCenter(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
+        // If admin is logged in, redirect to admin panel
+        if (isAdmin(userDetails)) {
+            return "redirect:/admin.html";
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-            MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
-            model.addAttribute("user", userDetails.getUserVO());
+            MyUserDetails details = (MyUserDetails) auth.getPrincipal();
+            model.addAttribute("user", details.getUserVO());
         } else {
             model.addAttribute("user", null);
         }
@@ -122,12 +142,17 @@ public class ViewController {
 
     @GetMapping("/admin.html")
     public String admin(@AuthenticationPrincipal MyUserDetails userDetails) {
-        // 检查是否为管理员
-        if (userDetails == null || userDetails.getUserVO() == null 
-                || userDetails.getUserVO().getRole() == null 
-                || userDetails.getUserVO().getRole() != 1) {
-            return "redirect:/index.html";  // 非管理员重定向到首页
+        // 检查是否为管理员 (Spring Security already handles this, but double-check for safety)
+        if (!isAdmin(userDetails)) {
+            return "redirect:/login.html";  // 非管理员重定向到登录页
         }
         return "admin";
+    }
+
+    // Helper method to check if user is admin
+    private boolean isAdmin(MyUserDetails userDetails) {
+        return userDetails != null && userDetails.getUserVO() != null 
+                && userDetails.getUserVO().getRole() != null 
+                && userDetails.getUserVO().getRole() == 1;
     }
 }

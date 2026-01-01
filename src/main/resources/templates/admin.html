@@ -20,23 +20,27 @@
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header h1 {
             font-size: 1.5rem;
         }
-        .nav {
+        .header .logout-btn {
             background-color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        .nav a {
             color: #ff6600;
-            text-decoration: none;
-            margin-right: 1rem;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
         }
-        .nav a:hover {
-            text-decoration: underline;
+        .header .logout-btn:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
         .container {
             max-width: 1400px;
@@ -153,11 +157,7 @@
 <body>
     <div class="header">
         <h1>🛡️ 管理员后台</h1>
-    </div>
-
-    <div class="nav">
-        <a href="/index.html">← 返回首页</a>
-        <a href="/user-center.html">个人中心</a>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
     </div>
 
     <div class="container">
@@ -220,6 +220,26 @@
             loadUsers();
             loadPendingItems();
         });
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                fetch('/api/users/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert('退出登录成功');
+                    window.location.href = '/login.html';
+                })
+                .catch(error => {
+                    console.error('退出登录失败:', error);
+                    // 即使出错也重定向到登录页面
+                    window.location.href = '/login.html';
+                });
+            }
+        }
 
         // 加载用户列表
         function loadUsers() {

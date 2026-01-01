@@ -94,7 +94,12 @@
                 success: function(response) {
                     if (response.success) {
                         alert('登录成功！');
-                        window.location.href = '/';
+                        // Check if user is admin (role = 1) and redirect accordingly
+                        if (response.data && response.data.role === 1) {
+                            window.location.href = '/admin.html';
+                        } else {
+                            window.location.href = '/';
+                        }
                     } else {
                         $('#errorAlert').text(response.message || '登录失败').show();
                     }
@@ -105,11 +110,16 @@
                 }
             });
         });
-            window.onload = function() {
+        
+        window.onload = function() {
             const params = new URLSearchParams(window.location.search);
             if (params.has('from')) {
-            alert('请先登录后再访问该页面！');
-        }
+                alert('请先登录后再访问该页面！');
+            }
+            if (params.has('error') && params.get('error') === 'forbidden') {
+                alert('您没有权限访问该页面！');
+            }
+        };
         };
     </script>
 </body>

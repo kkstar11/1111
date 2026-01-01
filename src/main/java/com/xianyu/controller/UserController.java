@@ -53,7 +53,10 @@ public class UserController {
 
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
             System.out.println("[LOGIN] 登录成功: " + userDetails.getUserVO());
-            return Result.success(userDetails.getUserVO());
+            
+            // Set a flag in the result to indicate if user is admin (for frontend redirect)
+            UserVO userVO = userDetails.getUserVO();
+            return Result.success(userVO);
         } catch (Exception e) {
             System.out.println("[LOGIN] 登录失败: " + e.getMessage());
             return Result.failure("invalid credentials or disabled");
