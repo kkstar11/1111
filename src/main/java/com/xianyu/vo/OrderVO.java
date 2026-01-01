@@ -1,5 +1,6 @@
 package com.xianyu.vo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OrderVO {
@@ -11,6 +12,7 @@ public class OrderVO {
     private String buyerName;
     private Long sellerId;
     private String sellerName;
+    private BigDecimal itemPrice;
     private Integer status;
     private LocalDateTime createTime;
     private LocalDateTime finishTime;
@@ -69,6 +71,14 @@ public class OrderVO {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public BigDecimal getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(BigDecimal itemPrice) {
+        this.itemPrice = itemPrice;
     }
 
     public Integer getStatus() {
