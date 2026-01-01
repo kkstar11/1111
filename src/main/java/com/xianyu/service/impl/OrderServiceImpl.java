@@ -48,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         order.setItemId(item.getId());
         order.setBuyerId(buyerId);
         order.setSellerId(item.getSellerId());
+        order.setItemPrice(item.getPrice());
         order.setStatus(0);
         orderMapper.insert(order);
 
@@ -119,6 +120,7 @@ public class OrderServiceImpl implements OrderService {
         vo.setItemId(order.getItemId());
         vo.setBuyerId(order.getBuyerId());
         vo.setSellerId(order.getSellerId());
+        vo.setItemPrice(order.getItemPrice());
         vo.setStatus(order.getStatus());
         vo.setCreateTime(order.getCreateTime());
         vo.setFinishTime(order.getFinishTime());

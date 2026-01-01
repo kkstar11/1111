@@ -1,5 +1,6 @@
 package com.xianyu.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Order {
@@ -8,6 +9,7 @@ public class Order {
     private Long itemId;
     private Long buyerId;
     private Long sellerId;
+    private BigDecimal itemPrice;
     private Integer status;
     private LocalDateTime createTime;
     private LocalDateTime finishTime;
@@ -42,6 +44,14 @@ public class Order {
 
     public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public BigDecimal getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(BigDecimal itemPrice) {
+        this.itemPrice = itemPrice;
     }
 
     public Integer getStatus() {

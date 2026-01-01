@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `item_id` BIGINT NOT NULL COMMENT '商品ID',
   `buyer_id` BIGINT NOT NULL COMMENT '买家用户ID',
   `seller_id` BIGINT NOT NULL COMMENT '卖家用户ID',
+  `item_price` DECIMAL(10, 2) NOT NULL COMMENT '商品价格快照',
   `status` INT NOT NULL DEFAULT 0 COMMENT '订单状态: 0-下单, 1-完成, 2-取消',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `finish_time` TIMESTAMP NULL DEFAULT NULL COMMENT '完成/取消时间',
