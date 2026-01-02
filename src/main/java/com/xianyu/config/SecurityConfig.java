@@ -20,7 +20,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/favicon.ico", "/css/**", "/js/**", "/images/**", "/static/**",
                                 "/login.html", "/register.html",
-                                "/api/users/login", "/api/users/register"
+                                "/api/users/register"
                         ).permitAll()
                         // Admin-only resources - must have ADMIN role (role = 1)
                         .requestMatchers("/admin.html", "/api/admin/**")
