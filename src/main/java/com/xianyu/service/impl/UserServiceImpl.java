@@ -1,6 +1,5 @@
 package com.xianyu.service.impl;
 
-import com.xianyu.dto.LoginDTO;
 import com.xianyu.dto.RegisterDTO;
 import com.xianyu.dao.UserMapper;
 import com.xianyu.entity.User;
@@ -29,10 +28,10 @@ public class UserServiceImpl implements UserService {
 
         // 唯一校验
         userMapper.findByUsername(dto.getUsername()).ifPresent(u -> {
-            throw new IllegalStateException("username exists");
+            throw new IllegalStateException("用户名已存在");
         });
         userMapper.findByStudentId(dto.getUsername()).ifPresent(u -> {
-            throw new IllegalStateException("studentId exists");
+            throw new IllegalStateException("学号已存在");
         });
 
         User user = new User();
@@ -48,33 +47,6 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
 
         return toVO(user);
-    }
-
-    @Override
-    public Optional<UserVO> login(LoginDTO dto) {
-        if (dto == null || isBlank(dto.getUsername()) || isBlank(dto.getPassword())) {
-            System.out.println("[LOGIN] 空用户名或密码，拒绝登录");
-            return Optional.empty();
-        }
-        User user = userMapper.findByUsername(dto.getUsername()).orElse(null);
-        System.out.println("[LOGIN] 尝试登录，输入用户名: " + dto.getUsername() + ", 密码(明文): " + dto.getPassword());
-        if (user == null) {
-            System.out.println("[LOGIN] 用户未找到");
-            return Optional.empty();
-        }
-        System.out.println("[LOGIN] 数据库密码(BCrypt): " + user.getPassword());
-        boolean matches = passwordEncoder.matches(dto.getPassword(), user.getPassword());
-        System.out.println("[LOGIN] passwordEncoder.matches(输入明文, 数据库哈希): " + matches);
-        if (!matches) {
-            System.out.println("[LOGIN] 密码不匹配！");
-            return Optional.empty();
-        }
-        if (user.getStatus() != null && user.getStatus() == 0) {
-            System.out.println("[LOGIN] 用户被禁用！");
-            return Optional.empty();
-        }
-        System.out.println("[LOGIN] 登录成功！");
-        return Optional.of(toVO(user));
     }
 
     @Override
@@ -106,16 +78,16 @@ public class UserServiceImpl implements UserService {
 
     private void validateRegister(RegisterDTO dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("payload required");
+            throw new IllegalArgumentException("请求数据不能为空");
         }
         if (isBlank(dto.getUsername())) {
-            throw new IllegalArgumentException("username required");
+            throw new IllegalArgumentException("用户名不能为空");
         }
         if (isBlank(dto.getPassword())) {
-            throw new IllegalArgumentException("password required");
+            throw new IllegalArgumentException("密码不能为空");
         }
         if (!isBlank(dto.getEmail()) && !EMAIL.matcher(dto.getEmail()).matches()) {
-            throw new IllegalArgumentException("email invalid");
+            throw new IllegalArgumentException("邮箱格式无效");
         }
     }
 

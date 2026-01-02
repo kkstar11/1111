@@ -109,13 +109,13 @@ public class ItemServiceImpl implements ItemService {
 
     private void validate(ItemDTO dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("item payload required");
+            throw new IllegalArgumentException("商品数据不能为空");
         }
         if (dto.getName() == null || dto.getName().isBlank()) {
-            throw new IllegalArgumentException("name required");
+            throw new IllegalArgumentException("商品名称不能为空");
         }
         if (dto.getPrice() == null || dto.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("price must be >= 0");
+            throw new IllegalArgumentException("价格必须大于等于 0");
         }
     }
 

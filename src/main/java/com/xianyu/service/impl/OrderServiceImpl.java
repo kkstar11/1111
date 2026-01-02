@@ -31,17 +31,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderVO createOrder(OrderCreateDTO dto, Long buyerId) {
         if (dto == null || dto.getItemId() == null) {
-            throw new IllegalArgumentException("itemId required");
+            throw new IllegalArgumentException("商品ID不能为空");
         }
         if (buyerId == null) {
-            throw new IllegalArgumentException("buyerId required");
+            throw new IllegalArgumentException("买家ID不能为空");
         }
 
         Item item = itemMapper.findById(dto.getItemId())
-                .orElseThrow(() -> new IllegalArgumentException("item not found"));
+                .orElseThrow(() -> new IllegalArgumentException("商品未找到"));
 
         if (item.getSellerId().equals(buyerId)) {
-            throw new IllegalArgumentException("cannot buy own item");
+            throw new IllegalArgumentException("不能购买自己的商品");
         }
 
         Order order = new Order();
