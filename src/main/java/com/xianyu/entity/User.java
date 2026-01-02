@@ -8,13 +8,11 @@ public class User {
     private String studentId;
     private String username;
     private String password;
-    private String realName;
     private String phone;
     private String email;
     private String college;
     private String major;
     private String grade;
-    private String avatarUrl;
     private Integer status; // 1正常 0禁用
     private Integer role;   // 0普通用户 1管理员
     private LocalDateTime createTime;
@@ -50,14 +48,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
     }
 
     public String getPhone() {
@@ -98,14 +88,6 @@ public class User {
 
     public void setGrade(String grade) {
         this.grade = grade;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
     }
 
     public Integer getStatus() {

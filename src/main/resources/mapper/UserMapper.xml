@@ -7,13 +7,11 @@
         <result property="studentId" column="student_id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
-        <result property="realName" column="real_name"/>
         <result property="phone" column="phone"/>
         <result property="email" column="email"/>
         <result property="college" column="college"/>
         <result property="major" column="major"/>
         <result property="grade" column="grade"/>
-        <result property="avatarUrl" column="avatar_url"/>
         <result property="status" column="status"/>
         <result property="role" column="role"/>
         <result property="createTime" column="create_time"/>
@@ -21,28 +19,28 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO student_user (student_id, username, password, real_name, phone, email, college, major, grade, avatar_url, status, role)
-        VALUES (#{studentId}, #{username}, #{password}, #{realName}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{avatarUrl}, #{status}, #{role})
+        INSERT INTO users (student_id, username, password, phone, email, college, major, grade, status, role)
+        VALUES (#{studentId}, #{username}, #{password}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{status}, #{role})
     </insert>
 
     <select id="findById" resultMap="UserMap">
-        SELECT * FROM student_user WHERE id = #{id}
+        SELECT * FROM users WHERE id = #{id}
     </select>
 
     <select id="findByUsername" resultMap="UserMap">
-        SELECT * FROM student_user WHERE username = #{username}
+        SELECT * FROM users WHERE username = #{username}
     </select>
 
     <select id="findByStudentId" resultMap="UserMap">
-        SELECT * FROM student_user WHERE student_id = #{studentId}
+        SELECT * FROM users WHERE student_id = #{studentId}
     </select>
 
     <select id="findAll" resultMap="UserMap">
-        SELECT * FROM student_user ORDER BY create_time DESC
+        SELECT * FROM users ORDER BY create_time DESC
     </select>
 
     <update id="updateStatus">
-        UPDATE student_user
+        UPDATE users
         SET status = #{status}, update_time = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>

@@ -20,11 +20,11 @@ public PasswordEncoder passwordEncoder() {
 
 ### 1. 数据库配置
 
-在数据库 `student_xianyu` 的 `student_user` 表中，直接在 `password` 列填入明文密码即可：
+在数据库 `student_xianyu` 的 `users` 表中，直接在 `password` 列填入明文密码即可：
 
 ```sql
 -- 示例：创建一个使用明文密码的用户
-INSERT INTO student_user (username, password, ...) 
+INSERT INTO users (username, password, ...) 
 VALUES ('admin', '123456', ...);
 ```
 

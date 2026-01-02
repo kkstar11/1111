@@ -114,7 +114,6 @@ public class AdminController {
         vo.setUsername(user.getUsername());
         vo.setEmail(user.getEmail());
         vo.setStudentId(user.getStudentId());
-        vo.setRealName(user.getRealName());
         vo.setPhone(user.getPhone());
         vo.setCollege(user.getCollege());
         vo.setMajor(user.getMajor());

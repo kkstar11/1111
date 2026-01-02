@@ -9,5 +9,7 @@ CREATE TABLE IF NOT EXISTS `favorite` (
   UNIQUE KEY `uk_user_item` (`user_id`, `item_id`),
   INDEX `idx_user_id` (`user_id`),
   INDEX `idx_item_id` (`item_id`),
-  INDEX `idx_create_time` (`create_time`)
+  INDEX `idx_create_time` (`create_time`),
+  CONSTRAINT `fk_favorite_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_favorite_item` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
