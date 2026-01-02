@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemVO create(ItemDTO dto, Long ownerId) {
         validate(dto);
         Item item = new Item();
-        item.setTitle(dto.getName());
+        item.setName(dto.getName());
         item.setDescription(dto.getDescription());
         item.setPrice(dto.getPrice());
         item.setOriginalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice() : dto.getPrice());
@@ -56,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
             return Optional.empty();
         }
         validate(dto);
-        existing.setTitle(dto.getName());
+        existing.setName(dto.getName());
         existing.setDescription(dto.getDescription());
         existing.setPrice(dto.getPrice());
         if (dto.getOriginalPrice() != null) {
@@ -124,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
     public static ItemVO getItemVO(Item item) {
         ItemVO vo = new ItemVO();
         vo.setId(item.getId());
-        vo.setName(item.getTitle());
+        vo.setName(item.getName());
         vo.setDescription(item.getDescription());
         vo.setPrice(item.getPrice());
         vo.setOriginalPrice(item.getOriginalPrice());

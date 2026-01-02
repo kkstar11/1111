@@ -22,13 +22,13 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.Item" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO item (title, description, price, original_price, category, conditions, status, seller_id, contact_way, location, image_urls, view_count, like_count)
-        VALUES (#{title}, #{description}, #{price}, #{originalPrice}, #{category}, #{conditions}, #{status}, #{sellerId}, #{contactWay}, #{location}, #{imageUrls}, #{viewCount}, #{likeCount})
+        INSERT INTO item (name, description, price, original_price, category, conditions, status, seller_id, contact_way, location, image_urls, view_count, like_count)
+        VALUES (#{name}, #{description}, #{price}, #{originalPrice}, #{category}, #{conditions}, #{status}, #{sellerId}, #{contactWay}, #{location}, #{imageUrls}, #{viewCount}, #{likeCount})
     </insert>
 
     <update id="update" parameterType="com.xianyu.entity.Item">
         UPDATE item
-        SET title = #{title},
+        SET name = #{name},
             description = #{description},
             price = #{price},
             original_price = #{originalPrice},
