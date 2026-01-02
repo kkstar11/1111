@@ -73,14 +73,6 @@ public class OrderVO {
         this.sellerName = sellerName;
     }
 
-    public BigDecimal getItemPrice() {
-        return itemPrice;
-    }
-
-    public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -104,4 +96,13 @@ public class OrderVO {
     public void setFinishTime(LocalDateTime finishTime) {
         this.finishTime = finishTime;
     }
+
+    public void setItemPrice(BigDecimal itemPrice) {
+        this.itemPrice = itemPrice;
+    }
+
+    public BigDecimal getItemPrice() {
+        return itemPrice;
+    }
+
 }

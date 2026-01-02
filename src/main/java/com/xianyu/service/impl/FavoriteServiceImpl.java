@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.xianyu.service.impl.ItemServiceImpl.getItemVO;
+
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
 
@@ -62,21 +64,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     private ItemVO toItemVO(Item item) {
-        ItemVO vo = new ItemVO();
-        vo.setId(item.getId());
-        // Note: Item entity uses 'title' field, ItemVO uses 'name' for consistency with API
-        vo.setName(item.getTitle());
-        vo.setDescription(item.getDescription());
-        vo.setPrice(item.getPrice());
-        vo.setOriginalPrice(item.getOriginalPrice());
-        vo.setCategory(item.getCategory());
-        vo.setConditions(item.getConditions());
-        vo.setStatus(item.getStatus());
-        vo.setOwnerId(item.getSellerId());
-        vo.setContactWay(item.getContactWay());
-        vo.setLocation(item.getLocation());
-        vo.setImageUrls(item.getImageUrls());
-        return vo;
+        return getItemVO(item);
     }
 }
 

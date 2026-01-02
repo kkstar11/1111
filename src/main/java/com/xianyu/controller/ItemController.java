@@ -30,16 +30,14 @@ public class ItemController {
         Long ownerId = userDetails.getUserVO().getId();
         try {
             ItemVO item = itemService.create(dto, ownerId);
-            System.out.println("[ITEM-CREATE] ownerId: " + ownerId + " 创建商品成功: " + item);
             return Result.success(item);
         } catch (IllegalArgumentException e) {
-            System.out.println("[ITEM-CREATE] 创建商品失败: " + e.getMessage());
             return Result.failure(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public Result<ItemVO> update(@PathVariable Long id, @RequestBody ItemDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public Result<ItemVO> update(@PathVariable ("id") Long id, @RequestBody ItemDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
             return Result.failure("未授权");
         }
@@ -81,7 +79,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}/status")
-    public Result<ItemVO> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public Result<ItemVO> updateStatus(@PathVariable ("id") Long id, @RequestBody StatusUpdateDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
             return Result.failure("未授权");
         }

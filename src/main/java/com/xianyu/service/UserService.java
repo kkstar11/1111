@@ -14,6 +14,5 @@ public interface UserService {
 
     Optional<User> findEntityByUsername(String username);  // 正常保留即可
 
-    // 删除多余的 ScopedValue<T> findByUsername
     Optional<UserVO> findByUsername(String username);
 }

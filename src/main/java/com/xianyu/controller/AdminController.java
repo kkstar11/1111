@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.xianyu.service.impl.ItemServiceImpl.getItemVO;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -49,7 +51,7 @@ public class AdminController {
     // 更新用户状态（启用/禁用）
     @PutMapping("/users/{id}/status")
     public Result<String> updateUserStatus(
-            @PathVariable Long id, 
+            @PathVariable ("id") Long id,
             @RequestBody Map<String, Integer> payload,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
@@ -80,7 +82,7 @@ public class AdminController {
     // 审核通过商品
     @PutMapping("/items/{id}/approve")
     public Result<String> approveItem(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
             return Result.failure("未授权：仅限管理员");
@@ -95,7 +97,7 @@ public class AdminController {
     // 驳回商品
     @PutMapping("/items/{id}/reject")
     public Result<String> rejectItem(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
             return Result.failure("未授权：仅限管理员");
@@ -126,19 +128,6 @@ public class AdminController {
 
     // 将Item实体转换为ItemVO
     private ItemVO toItemVO(Item item) {
-        ItemVO vo = new ItemVO();
-        vo.setId(item.getId());
-        vo.setName(item.getTitle());
-        vo.setDescription(item.getDescription());
-        vo.setPrice(item.getPrice());
-        vo.setOriginalPrice(item.getOriginalPrice());
-        vo.setCategory(item.getCategory());
-        vo.setConditions(item.getConditions());
-        vo.setStatus(item.getStatus());
-        vo.setOwnerId(item.getSellerId());
-        vo.setContactWay(item.getContactWay());
-        vo.setLocation(item.getLocation());
-        vo.setImageUrls(item.getImageUrls());
-        return vo;
+        return getItemVO(item);
     }
 }

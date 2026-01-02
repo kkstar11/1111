@@ -4,6 +4,7 @@ import com.xianyu.dto.ItemDTO;
 import com.xianyu.security.MyUserDetails;
 import com.xianyu.service.FavoriteService;
 import com.xianyu.service.ItemService;
+import com.xianyu.vo.ItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Controller
 public class ViewController {
@@ -32,7 +34,7 @@ public class ViewController {
     // 首页/商品列表
     @GetMapping({"/", "/index.html", "/index"})
     public String index(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-        // If admin is logged in, redirect to admin panel
+
         if (isAdmin(userDetails)) {
             return "redirect:/admin.html";
         }
@@ -43,7 +45,6 @@ public class ViewController {
     // 商品详情页
     @GetMapping("/item-detail.html")
     public String itemDetail(@RequestParam("id") Long id, Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-        // If admin is logged in, redirect to admin panel
         if (isAdmin(userDetails)) {
             return "redirect:/admin.html";
         }
@@ -64,7 +65,7 @@ public class ViewController {
         if (userDetails == null) {
             return "redirect:/login.html";
         }
-        // If admin is logged in, redirect to admin panel
+
         if (isAdmin(userDetails)) {
             return "redirect:/admin.html";
         }
@@ -72,23 +73,6 @@ public class ViewController {
             itemService.findById(id).ifPresent(item -> model.addAttribute("item", item));
         }
         return "item-edit";
-    }
-
-    @PostMapping("/item-edit.html")
-    public String saveItemEdit(@ModelAttribute ItemDTO itemDTO, 
-                               @AuthenticationPrincipal MyUserDetails userDetails,
-                               Model model) {
-        if (userDetails == null) {
-            return "redirect:/login.html";
-        }
-        Long ownerId = userDetails.getUserVO().getId();
-        // 判断是新建还是编辑
-        if (itemDTO.getId() == null) {
-            itemService.create(itemDTO, ownerId);
-        } else {
-            itemService.update(itemDTO.getId(), itemDTO, ownerId);
-        }
-        return "redirect:/my-orders.html";
     }
 
     // 登录页
@@ -105,7 +89,6 @@ public class ViewController {
 
     @GetMapping("/my-orders.html")
     public String myOrders(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-        // If admin is logged in, redirect to admin panel
         if (isAdmin(userDetails)) {
             return "redirect:/admin.html";
         }
@@ -126,7 +109,6 @@ public class ViewController {
 
     @GetMapping("/user-center.html")
     public String userCenter(Model model, @AuthenticationPrincipal MyUserDetails userDetails) {
-        // If admin is logged in, redirect to admin panel
         if (isAdmin(userDetails)) {
             return "redirect:/admin.html";
         }
@@ -142,14 +124,13 @@ public class ViewController {
 
     @GetMapping("/admin.html")
     public String admin(@AuthenticationPrincipal MyUserDetails userDetails) {
-        // 检查是否为管理员 (Spring Security already handles this, but double-check for safety)
+        // 检查是否为管理员
         if (!isAdmin(userDetails)) {
             return "redirect:/login.html";  // 非管理员重定向到登录页
         }
         return "admin";
     }
 
-    // Helper method to check if user is admin
     private boolean isAdmin(MyUserDetails userDetails) {
         return userDetails != null && userDetails.getUserVO() != null 
                 && userDetails.getUserVO().getRole() != null 

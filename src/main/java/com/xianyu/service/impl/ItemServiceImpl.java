@@ -5,6 +5,7 @@ import com.xianyu.dto.ItemDTO;
 import com.xianyu.entity.Item;
 import com.xianyu.service.ItemService;
 import com.xianyu.vo.ItemVO;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -67,7 +68,9 @@ public class ItemServiceImpl implements ItemService {
         if (dto.getConditions() != null) {
             existing.setConditions(dto.getConditions());
         }
-        // 不允许用户通过编辑接口修改status，status只能通过专门的审核接口或updateStatus接口修改
+        if (dto.getStatus() != null) {
+            existing.setStatus(dto.getStatus());
+        }
         if (dto.getContactWay() != null) {
             existing.setContactWay(dto.getContactWay());
         }
@@ -101,12 +104,6 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.findAll().stream().map(this::toVO).toList();
     }
 
-    @Override
-    public List<ItemVO> listOnSale() {
-        // 只返回status=1(上架)的商品，供首页展示
-        return itemMapper.findByStatus(STATUS_ON_SALE).stream().map(this::toVO).toList();
-    }
-
     private void validate(ItemDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("商品数据不能为空");
@@ -120,6 +117,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private ItemVO toVO(Item item) {
+        return getItemVO(item);
+    }
+
+    @NonNull
+    public static ItemVO getItemVO(Item item) {
         ItemVO vo = new ItemVO();
         vo.setId(item.getId());
         vo.setName(item.getTitle());
@@ -138,16 +140,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemVO> listByOwnerId(Long ownerId) {
-        // Mapper查出商品实体
         List<Item> entities = itemMapper.findBySeller(ownerId);
-        // 转为VO列表
+
         return entities.stream().map(this::toVO).toList();
     }
 
     @Override
     public boolean updateStatus(Long id, Integer status, Long ownerId) {
-        // 验证status值是否合法（0-4之间）
-        if (status == null || status < 0 || status > STATUS_REJECTED) {
+        if (status == null || (status != STATUS_ON_SALE && status != STATUS_OFF_SALE)) {
             return false;
         }
         // 查询商品是否存在，并验证是否为所有者
@@ -155,36 +155,19 @@ public class ItemServiceImpl implements ItemService {
         if (existing == null || (ownerId != null && !ownerId.equals(existing.getSellerId()))) {
             return false;
         }
-        
-        if (existing.getStatus() != null) {
-            int currentStatus = existing.getStatus();
-            
-            // 已售出的商品不允许修改状态
-            if (currentStatus == STATUS_SOLD) {
-                return false;
-            }
-            
-            // 待审核和被驳回的商品不允许用户自行修改状态
-            // 待审核商品需要等待管理员审核
-            // 被驳回商品需要删除后重新发布
-            if (currentStatus == STATUS_PENDING || currentStatus == STATUS_REJECTED) {
-                return false;
-            }
-            
-            // 普通用户只能在上架(1)和下架(3)之间切换
-            // 允许的转换: 1→3, 3→1, 或保持不变(1→1, 3→3)
-            boolean isValidTransition = 
-                (currentStatus == STATUS_ON_SALE && (status == STATUS_ON_SALE || status == STATUS_OFF_SALE)) ||
-                (currentStatus == STATUS_OFF_SALE && (status == STATUS_ON_SALE || status == STATUS_OFF_SALE));
-            
-            if (!isValidTransition) {
-                return false;
-            }
+        // 不允许修改已售出商品的状态
+        if (existing.getStatus() != null && existing.getStatus() == STATUS_SOLD) {
+            return false;
         }
-        
         // 更新状态
         int updated = itemMapper.updateStatus(id, status);
         return updated > 0;
+    }
+
+    @Override
+    public List<ItemVO> listOnSale() {
+        List<Item> items = itemMapper.findByStatus(STATUS_ON_SALE);
+        return items.stream().map(this::toVO).toList();
     }
 }
 

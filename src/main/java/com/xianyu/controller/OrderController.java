@@ -4,14 +4,9 @@ import com.xianyu.dto.OrderCreateDTO;
 import com.xianyu.service.OrderService;
 import com.xianyu.util.Result;
 import com.xianyu.vo.OrderVO;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.xianyu.security.MyUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +21,14 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    // 下单
     @PostMapping
-    public Result<OrderVO> create(@RequestBody OrderCreateDTO dto, HttpSession session) {
-        Long buyerId = currentUserId(session);
-        if (buyerId == null) {
+    public Result<OrderVO> create(@RequestBody OrderCreateDTO dto,
+                                  @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long buyerId = userDetails.getUserVO().getId();
         try {
             return Result.success(orderService.createOrder(dto, buyerId));
         } catch (IllegalArgumentException e) {
@@ -39,32 +36,38 @@ public class OrderController {
         }
     }
 
+    // 完成订单
     @PutMapping("/{id}/finish")
-    public Result<OrderVO> finish(@PathVariable Long id, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<OrderVO> finish(@PathVariable("id") Long id,
+                                  @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         Optional<OrderVO> result = orderService.finishOrder(id, userId);
         return result.map(Result::success).orElseGet(() -> Result.failure("未找到或无权限"));
     }
 
+    // 取消订单
     @PutMapping("/{id}/cancel")
-    public Result<OrderVO> cancel(@PathVariable Long id, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<OrderVO> cancel(@PathVariable Long id,
+                                  @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         Optional<OrderVO> result = orderService.cancelOrder(id, userId);
         return result.map(Result::success).orElseGet(() -> Result.failure("未找到或无权限"));
     }
 
+    // 订单详情
     @GetMapping("/{id}")
-    public Result<OrderVO> get(@PathVariable Long id, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<OrderVO> get(@PathVariable Long id,
+                               @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         return orderService.findById(id)
                 .map(order -> {
                     if (order.getBuyerId().equals(userId) || order.getSellerId().equals(userId)) {
@@ -75,29 +78,23 @@ public class OrderController {
                 .orElseGet(() -> Result.failure("订单未找到"));
     }
 
+    // 买家订单列表
     @GetMapping("/buyer")
-    public Result<List<OrderVO>> listByBuyer(HttpSession session) {
-        Long buyerId = currentUserId(session);
-        if (buyerId == null) {
+    public Result<List<OrderVO>> listByBuyer(@AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long buyerId = userDetails.getUserVO().getId();
         return Result.success(orderService.listByBuyer(buyerId));
     }
 
+    // 卖家订单列表
     @GetMapping("/seller")
-    public Result<List<OrderVO>> listBySeller(HttpSession session) {
-        Long sellerId = currentUserId(session);
-        if (sellerId == null) {
+    public Result<List<OrderVO>> listBySeller(@AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long sellerId = userDetails.getUserVO().getId();
         return Result.success(orderService.listBySeller(sellerId));
-    }
-
-    private Long currentUserId(HttpSession session) {
-        Object u = session.getAttribute("currentUser");
-        if (u instanceof com.xianyu.vo.UserVO vo) {
-            return vo.getId();
-        }
-        return null;
     }
 }

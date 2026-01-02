@@ -62,7 +62,8 @@
         <!-- Product Images -->
         <div class="col-md-6">
             <div class="mb-3">
-                <img id="mainImage" src="https://via.placeholder.com/500x500?text=No+Image"
+                <img id="mainImage"
+                     th:src="@{'/' + ${item.imageUrls}}"
                      class="main-image border rounded"
                      th:alt="${item.name}" />
             </div>
@@ -100,13 +101,12 @@
 <script>
     $(document).ready(function() {
         const itemId = $('#favoriteBtn').data('item-id');
-        
-        // Helper function to build login redirect URL
+
         function getLoginRedirectUrl() {
             return '/login.html?from=' + encodeURIComponent(window.location.pathname + window.location.search);
         }
-        
-        // Check if item is already favorited on page load
+
+        // 检查是否已收藏
         $.ajax({
             url: '/api/favorites/check',
             method: 'GET',
@@ -121,22 +121,23 @@
                 }
             },
             error: function() {
-                // If check fails, assume not favorited
+                // 如果 check 失败，按未收藏处理
                 $('#favoriteText').text('收藏商品');
                 $('#favoriteBtn').data('favorited', false);
             }
         });
-        
+
+        // 收藏/取消收藏
         $('#favoriteBtn').click(function(e) {
             e.preventDefault();
-            
+
             const $btn = $(this);
             const $btnText = $('#favoriteText');
             const isFavorited = $btn.data('favorited');
-            
+
             // Disable button to prevent double clicks
             $btn.prop('disabled', true);
-            
+
             if (isFavorited) {
                 // Remove favorite
                 $.ajax({
@@ -169,8 +170,8 @@
                 $.ajax({
                     url: '/api/favorites',
                     method: 'POST',
-                    data: { itemId: itemId },
-                    success: function(response) {
+                    data: {itemId: itemId},
+                    success: function (response) {
                         if (response.success) {
                             $btnText.text('已收藏');
                             $btn.data('favorited', true);
@@ -180,7 +181,7 @@
                         }
                         $btn.prop('disabled', false);
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
                             alert('请先登录后再收藏商品');
                             window.location.href = getLoginRedirectUrl();
@@ -192,6 +193,46 @@
                     }
                 });
             }
+        });
+
+        // 下单操作 <<<<<<<<<<<<<<<<<<<<<< 独立出来
+        $('#orderBtn').click(function (e) {
+            e.preventDefault();
+            const btn = $(this);
+            // 防止重复提交
+            btn.prop('disabled', true);
+            const itemId = btn.data('item-id');
+            if (!itemId) {
+                alert('商品ID异常，无法下单');
+                btn.prop('disabled', false);
+                return;
+            }
+            $.ajax({
+                url: '/api/orders',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({itemId: itemId}),
+                success: function (res) {
+                    if (res.success) {
+                        alert('下单成功！');
+                        // 跳转到订单详情页，可以按需修改跳转路径
+                        window.location.href = '/my-orders.html';
+                    } else {
+                        alert('下单失败：' + (res.message || '未知原因'));
+                    }
+                    btn.prop('disabled', false);
+                },
+                error: function (xhr) {
+                    if (xhr.status === 401 || (xhr.responseJSON && xhr.responseJSON.message === 'unauthorized')) {
+                        alert('请先登录后再下单');
+                        window.location.href = getLoginRedirectUrl();
+                    } else {
+                        const response = xhr.responseJSON;
+                        alert('下单请求失败：' + (response && response.message ? response.message : '网络错误，请稍后重试'));
+                    }
+                    btn.prop('disabled', false);
+                }
+            });
         });
     });
 </script>

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class Item {
 
     private Long id;
-    private String title;
+    private String name;
     private String description;
     private BigDecimal price;
     private BigDecimal originalPrice;
@@ -31,11 +31,11 @@ public class Item {
     }
 
     public String getTitle() {
-        return title;
+        return name;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.name = name;
     }
 
     public String getDescription() {

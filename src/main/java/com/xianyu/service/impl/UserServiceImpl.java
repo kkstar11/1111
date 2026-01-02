@@ -35,10 +35,9 @@ public class UserServiceImpl implements UserService {
         });
 
         User user = new User();
-        user.setStudentId(dto.getUsername()); // 简化：用 username 当学号，若有单独字段可调整
+        user.setStudentId(dto.getUsername());
         user.setUsername(dto.getUsername());
         String encodedPwd = passwordEncoder.encode(dto.getPassword());
-        System.out.println("[REGISTER] 原始密码: " + dto.getPassword() + " 加密后: " + encodedPwd);
         user.setPassword(encodedPwd);
         user.setEmail(dto.getEmail());
         user.setStatus(1);

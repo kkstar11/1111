@@ -6,7 +6,6 @@ import com.xianyu.dao.UserMapper;
 import com.xianyu.dto.OrderCreateDTO;
 import com.xianyu.entity.Item;
 import com.xianyu.entity.Order;
-import com.xianyu.entity.User;
 import com.xianyu.service.OrderService;
 import com.xianyu.vo.OrderVO;
 import org.springframework.stereotype.Service;

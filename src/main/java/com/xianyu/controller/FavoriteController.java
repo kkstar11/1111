@@ -3,13 +3,10 @@ package com.xianyu.controller;
 import com.xianyu.service.FavoriteService;
 import com.xianyu.util.Result;
 import com.xianyu.vo.FavoriteVO;
+import com.xianyu.security.MyUserDetails;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,50 +20,48 @@ public class FavoriteController {
         this.favoriteService = favoriteService;
     }
 
+    // 收藏
     @PostMapping
-    public Result<FavoriteVO> add(Long itemId, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<FavoriteVO> add(@RequestParam("itemId") Long itemId,
+                                  @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         return Result.success(favoriteService.addFavorite(userId, itemId));
     }
 
+    // 取消收藏
     @DeleteMapping
-    public Result<Void> remove(Long itemId, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<Void> remove(@RequestParam("itemId") Long itemId,
+                               @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         boolean removed = favoriteService.removeFavorite(userId, itemId);
         return removed ? Result.success(null) : Result.failure("收藏未找到");
     }
 
+    // 获取收藏列表
     @GetMapping
-    public Result<List<FavoriteVO>> list(HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<List<FavoriteVO>> list(@AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.failure("未授权");
         }
+        Long userId = userDetails.getUserVO().getId();
         return Result.success(favoriteService.listByUser(userId));
     }
 
+    // 检查是否收藏某商品
     @GetMapping("/check")
-    public Result<Boolean> check(@RequestParam Long itemId, HttpSession session) {
-        Long userId = currentUserId(session);
-        if (userId == null) {
+    public Result<Boolean> check(@RequestParam("itemId") Long itemId,
+                                 @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails == null) {
             return Result.success(false);
         }
+        Long userId = userDetails.getUserVO().getId();
         boolean isFavorited = favoriteService.findByUserAndItem(userId, itemId).isPresent();
         return Result.success(isFavorited);
     }
-
-    private Long currentUserId(HttpSession session) {
-        Object u = session.getAttribute("currentUser");
-        if (u instanceof com.xianyu.vo.UserVO vo) {
-            return vo.getId();
-        }
-        return null;
-    }
 }
-

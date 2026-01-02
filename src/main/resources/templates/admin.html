@@ -160,6 +160,7 @@
         <button class="logout-btn" onclick="logout()">退出登录</button>
     </div>
 
+
     <div class="container">
         <!-- 用户管理区域 -->
         <div class="section">
@@ -220,26 +221,6 @@
             loadUsers();
             loadPendingItems();
         });
-
-        // 退出登录
-        function logout() {
-            if (confirm('确定要退出登录吗？')) {
-                fetch('/api/users/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                })
-                .then(response => response.json())
-                .then(result => {
-                    alert('退出登录成功');
-                    window.location.href = '/login.html';
-                })
-                .catch(error => {
-                    console.error('退出登录失败:', error);
-                    // 即使出错也重定向到登录页面
-                    window.location.href = '/login.html';
-                });
-            }
-        }
 
         // 加载用户列表
         function loadUsers() {
@@ -412,6 +393,11 @@
                 console.error('驳回商品失败:', error);
                 alert('驳回失败，请重试');
             });
+        }
+
+        function logout() {
+            fetch('/api/logout', { method: 'POST', credentials: 'include' })
+                .then(() => { window.location.href = '/login.html'; });
         }
     </script>
 </body>

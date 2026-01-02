@@ -19,10 +19,10 @@ public class ItemDTO {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
@@ -103,5 +103,7 @@ public class ItemDTO {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+
 }
 
