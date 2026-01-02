@@ -17,15 +17,18 @@ CREATE TABLE favorite (
   UNIQUE KEY uk_user_item (user_id, item_id),
   INDEX idx_user_id (user_id),
   INDEX idx_item_id (item_id),
-  INDEX idx_create_time (create_time)
+  INDEX idx_create_time (create_time),
+  CONSTRAINT fk_favorite_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT fk_favorite_item FOREIGN KEY (item_id) REFERENCES item (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
 ```
 
 **字段说明：**
-- `user_id`: 用户ID，关联 student_user 表
+- `user_id`: 用户ID，关联 users 表
 - `item_id`: 商品ID，关联 item 表
 - `create_time`: 收藏时间，默认为当前时间
 - 唯一约束确保同一用户不会重复收藏同一商品
+- 外键约束确保数据完整性
 
 **命名规范：**
 所有字段严格使用下划线命名（user_id, item_id, create_time），符合项目要求。

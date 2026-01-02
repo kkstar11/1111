@@ -48,7 +48,7 @@
 ## 权限控制
 
 ### 管理员角色
-在 `student_user` 表中，`role` 字段标识用户角色：
+在 `users` 表中，`role` 字段标识用户角色：
 - **0**: 普通用户
 - **1**: 管理员
 
@@ -135,7 +135,7 @@ ALTER TABLE item MODIFY COLUMN status INT COMMENT '商品状态: 0-待审核, 1-
 ### 设置管理员账号
 需要在数据库中手动将用户的 `role` 字段设为 1：
 ```sql
-UPDATE student_user SET role = 1 WHERE username = 'admin_username';
+UPDATE users SET role = 1 WHERE username = 'admin_username';
 ```
 
 ### 测试流程
