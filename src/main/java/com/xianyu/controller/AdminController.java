@@ -39,7 +39,7 @@ public class AdminController {
     @GetMapping("/users")
     public Result<List<UserVO>> getAllUsers(@AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
-            return Result.failure("unauthorized: admin only");
+            return Result.failure("未授权：仅限管理员");
         }
         List<User> users = userMapper.findAll();
         List<UserVO> userVOs = users.stream().map(this::toUserVO).toList();
@@ -53,24 +53,24 @@ public class AdminController {
             @RequestBody Map<String, Integer> payload,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
-            return Result.failure("unauthorized: admin only");
+            return Result.failure("未授权：仅限管理员");
         }
         Integer status = payload.get("status");
         if (status == null || (status != 0 && status != 1)) {
-            return Result.failure("invalid status: must be 0 or 1");
+            return Result.failure("状态无效：必须为 0 或 1");
         }
         int updated = userMapper.updateStatus(id, status);
         if (updated > 0) {
-            return Result.success("user status updated successfully");
+            return Result.success("用户状态更新成功");
         }
-        return Result.failure("update failed: user not found");
+        return Result.failure("更新失败：用户未找到");
     }
 
     // 获取待审核商品列表
     @GetMapping("/items/pending")
     public Result<List<ItemVO>> getPendingItems(@AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
-            return Result.failure("unauthorized: admin only");
+            return Result.failure("未授权：仅限管理员");
         }
         List<Item> items = itemMapper.findByStatus(0); // 0 = pending
         List<ItemVO> itemVOs = items.stream().map(this::toItemVO).toList();
@@ -83,13 +83,13 @@ public class AdminController {
             @PathVariable Long id,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
-            return Result.failure("unauthorized: admin only");
+            return Result.failure("未授权：仅限管理员");
         }
         int updated = itemMapper.updateStatus(id, 1); // 1 = approved/on sale
         if (updated > 0) {
-            return Result.success("item approved successfully");
+            return Result.success("商品审核通过");
         }
-        return Result.failure("approval failed: item not found");
+        return Result.failure("审核失败：商品未找到");
     }
 
     // 驳回商品
@@ -98,13 +98,13 @@ public class AdminController {
             @PathVariable Long id,
             @AuthenticationPrincipal MyUserDetails userDetails) {
         if (!isAdmin(userDetails)) {
-            return Result.failure("unauthorized: admin only");
+            return Result.failure("未授权：仅限管理员");
         }
         int updated = itemMapper.updateStatus(id, 4); // 4 = rejected
         if (updated > 0) {
-            return Result.success("item rejected successfully");
+            return Result.success("商品已驳回");
         }
-        return Result.failure("rejection failed: item not found");
+        return Result.failure("驳回失败：商品未找到");
     }
 
     // 将User实体转换为UserVO

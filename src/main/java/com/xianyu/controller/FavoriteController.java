@@ -27,7 +27,7 @@ public class FavoriteController {
     public Result<FavoriteVO> add(Long itemId, HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         return Result.success(favoriteService.addFavorite(userId, itemId));
     }
@@ -36,17 +36,17 @@ public class FavoriteController {
     public Result<Void> remove(Long itemId, HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         boolean removed = favoriteService.removeFavorite(userId, itemId);
-        return removed ? Result.success(null) : Result.failure("favorite not found");
+        return removed ? Result.success(null) : Result.failure("收藏未找到");
     }
 
     @GetMapping
     public Result<List<FavoriteVO>> list(HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         return Result.success(favoriteService.listByUser(userId));
     }

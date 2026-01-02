@@ -25,7 +25,7 @@ public class ItemController {
     @PostMapping
     public Result<ItemVO> create(@RequestBody ItemDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Long ownerId = userDetails.getUserVO().getId();
         try {
@@ -41,28 +41,28 @@ public class ItemController {
     @PutMapping("/{id}")
     public Result<ItemVO> update(@PathVariable Long id, @RequestBody ItemDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Long ownerId = userDetails.getUserVO().getId();
         Optional<ItemVO> updated = itemService.update(id, dto, ownerId);
-        return updated.map(Result::success).orElseGet(() -> Result.failure("not found or no permission"));
+        return updated.map(Result::success).orElseGet(() -> Result.failure("未找到或无权限"));
     }
 
     @DeleteMapping("/{id}")
     public Result<Void> delete(@PathVariable("id") Long id, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Long ownerId = userDetails.getUserVO().getId();
         boolean ok = itemService.delete(id, ownerId);
-        return ok ? Result.success(null) : Result.failure("not found or no permission");
+        return ok ? Result.success(null) : Result.failure("未找到或无权限");
     }
 
     @GetMapping("/{id}")
     public Result<ItemVO> get(@PathVariable Long id) {
         return itemService.findById(id)
                 .map(Result::success)
-                .orElseGet(() -> Result.failure("item not found"));
+                .orElseGet(() -> Result.failure("商品未找到"));
     }
 
     @GetMapping
@@ -73,7 +73,7 @@ public class ItemController {
     @GetMapping("/my")
     public Result<List<ItemVO>> myItems(@AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Long ownerId = userDetails.getUserVO().getId();
         List<ItemVO> list = itemService.listByOwnerId(ownerId);
@@ -83,20 +83,20 @@ public class ItemController {
     @PutMapping("/{id}/status")
     public Result<ItemVO> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateDTO dto, @AuthenticationPrincipal MyUserDetails userDetails) {
         if (userDetails == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Long ownerId = userDetails.getUserVO().getId();
         Integer status = dto.getStatus();
         if (status == null) {
-            return Result.failure("status is required");
+            return Result.failure("状态不能为空");
         }
         boolean ok = itemService.updateStatus(id, status, ownerId);
         if (!ok) {
-            return Result.failure("update failed or no permission");
+            return Result.failure("更新失败或无权限");
         }
         // 返回更新后的商品信息
         return itemService.findById(id)
                 .map(Result::success)
-                .orElseGet(() -> Result.failure("item not found"));
+                .orElseGet(() -> Result.failure("商品未找到"));
     }
 }

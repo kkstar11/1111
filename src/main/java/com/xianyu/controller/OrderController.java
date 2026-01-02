@@ -30,7 +30,7 @@ public class OrderController {
     public Result<OrderVO> create(@RequestBody OrderCreateDTO dto, HttpSession session) {
         Long buyerId = currentUserId(session);
         if (buyerId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         try {
             return Result.success(orderService.createOrder(dto, buyerId));
@@ -43,43 +43,43 @@ public class OrderController {
     public Result<OrderVO> finish(@PathVariable Long id, HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Optional<OrderVO> result = orderService.finishOrder(id, userId);
-        return result.map(Result::success).orElseGet(() -> Result.failure("not found or no permission"));
+        return result.map(Result::success).orElseGet(() -> Result.failure("未找到或无权限"));
     }
 
     @PutMapping("/{id}/cancel")
     public Result<OrderVO> cancel(@PathVariable Long id, HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         Optional<OrderVO> result = orderService.cancelOrder(id, userId);
-        return result.map(Result::success).orElseGet(() -> Result.failure("not found or no permission"));
+        return result.map(Result::success).orElseGet(() -> Result.failure("未找到或无权限"));
     }
 
     @GetMapping("/{id}")
     public Result<OrderVO> get(@PathVariable Long id, HttpSession session) {
         Long userId = currentUserId(session);
         if (userId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         return orderService.findById(id)
                 .map(order -> {
                     if (order.getBuyerId().equals(userId) || order.getSellerId().equals(userId)) {
                         return Result.success(order);
                     }
-                    return Result.<OrderVO>failure("no permission");
+                    return Result.<OrderVO>failure("无权限");
                 })
-                .orElseGet(() -> Result.failure("order not found"));
+                .orElseGet(() -> Result.failure("订单未找到"));
     }
 
     @GetMapping("/buyer")
     public Result<List<OrderVO>> listByBuyer(HttpSession session) {
         Long buyerId = currentUserId(session);
         if (buyerId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         return Result.success(orderService.listByBuyer(buyerId));
     }
@@ -88,7 +88,7 @@ public class OrderController {
     public Result<List<OrderVO>> listBySeller(HttpSession session) {
         Long sellerId = currentUserId(session);
         if (sellerId == null) {
-            return Result.failure("unauthorized");
+            return Result.failure("未授权");
         }
         return Result.success(orderService.listBySeller(sellerId));
     }
