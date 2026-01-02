@@ -7,7 +7,6 @@ public class Favorite {
     private Long id;
     private Long userId;
     private Long itemId;
-    private LocalDateTime createTime;
     private Item item;
 
     public Long getId() {
@@ -32,14 +31,6 @@ public class Favorite {
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
     }
 
     public Item getItem() {

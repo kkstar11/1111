@@ -4,7 +4,6 @@ import com.xianyu.service.FavoriteService;
 import com.xianyu.util.Result;
 import com.xianyu.vo.FavoriteVO;
 import com.xianyu.security.MyUserDetails;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

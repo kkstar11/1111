@@ -1,7 +1,6 @@
 package com.xianyu.controller;
 
 import com.xianyu.dto.RegisterDTO;
-import com.xianyu.security.MyUserDetails;
 import com.xianyu.util.Result;
 import com.xianyu.vo.UserVO;
 import com.xianyu.service.UserService;

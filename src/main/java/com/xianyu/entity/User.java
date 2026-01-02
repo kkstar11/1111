@@ -1,7 +1,5 @@
 package com.xianyu.entity;
 
-import java.time.LocalDateTime;
-
 public class User {
 
     private Long id;
@@ -10,13 +8,8 @@ public class User {
     private String password;
     private String phone;
     private String email;
-    private String college;
-    private String major;
-    private String grade;
     private Integer status; // 1正常 0禁用
     private Integer role;   // 0普通用户 1管理员
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 
     public Long getId() {
         return id;
@@ -66,30 +59,6 @@ public class User {
         this.email = email;
     }
 
-    public String getCollege() {
-        return college;
-    }
-
-    public void setCollege(String college) {
-        this.college = college;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -105,21 +74,4 @@ public class User {
     public void setRole(Integer role) {
         this.role = role;
     }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
 }
-

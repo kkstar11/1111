@@ -9,18 +9,13 @@
         <result property="password" column="password"/>
         <result property="phone" column="phone"/>
         <result property="email" column="email"/>
-        <result property="college" column="college"/>
-        <result property="major" column="major"/>
-        <result property="grade" column="grade"/>
         <result property="status" column="status"/>
         <result property="role" column="role"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.xianyu.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (student_id, username, password, phone, email, college, major, grade, status, role)
-        VALUES (#{studentId}, #{username}, #{password}, #{phone}, #{email}, #{college}, #{major}, #{grade}, #{status}, #{role})
+        INSERT INTO users (student_id, username, password, phone, email,  status, role)
+        VALUES (#{studentId}, #{username}, #{password}, #{phone}, #{email},  #{status}, #{role})
     </insert>
 
     <select id="findById" resultMap="UserMap">
@@ -36,12 +31,12 @@
     </select>
 
     <select id="findAll" resultMap="UserMap">
-        SELECT * FROM users ORDER BY create_time DESC
+        SELECT * FROM users ORDER BY id DESC
     </select>
 
     <update id="updateStatus">
         UPDATE users
-        SET status = #{status}, update_time = CURRENT_TIMESTAMP
+        SET status = #{status}
         WHERE id = #{id}
     </update>
 </mapper>

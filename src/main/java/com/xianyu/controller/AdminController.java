@@ -117,9 +117,6 @@ public class AdminController {
         vo.setEmail(user.getEmail());
         vo.setStudentId(user.getStudentId());
         vo.setPhone(user.getPhone());
-        vo.setCollege(user.getCollege());
-        vo.setMajor(user.getMajor());
-        vo.setGrade(user.getGrade());
         vo.setStatus(user.getStatus());
         vo.setRole(user.getRole());
         // 不设置password，避免密码哈希泄露

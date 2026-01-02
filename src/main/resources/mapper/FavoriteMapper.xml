@@ -6,14 +6,12 @@
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="itemId" column="item_id"/>
-        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <resultMap id="FavoriteWithItemMap" type="com.xianyu.entity.Favorite">
         <id property="id" column="fav_id"/>
         <result property="userId" column="user_id"/>
         <result property="itemId" column="item_id"/>
-        <result property="createTime" column="fav_create_time"/>
         <association property="item" javaType="com.xianyu.entity.Item">
             <id property="id" column="item_id"/>
             <result property="title" column="title"/>
@@ -27,10 +25,6 @@
             <result property="contactWay" column="contact_way"/>
             <result property="location" column="location"/>
             <result property="imageUrls" column="image_urls"/>
-            <result property="viewCount" column="view_count"/>
-            <result property="likeCount" column="like_count"/>
-            <result property="createTime" column="item_create_time"/>
-            <result property="updateTime" column="update_time"/>
         </association>
     </resultMap>
 
@@ -52,8 +46,7 @@
             f.id as fav_id,
             f.user_id,
             f.item_id,
-            f.create_time as fav_create_time,
-            i.title,
+            i.name,
             i.description,
             i.price,
             i.original_price,
@@ -63,15 +56,11 @@
             i.seller_id,
             i.contact_way,
             i.location,
-            i.image_urls,
-            i.view_count,
-            i.like_count,
-            i.create_time as item_create_time,
-            i.update_time
+            i.image_urls
         FROM favorite f
         LEFT JOIN item i ON f.item_id = i.id
         WHERE f.user_id = #{userId}
-        ORDER BY f.create_time DESC
+        ORDER BY f.id DESC
     </select>
 </mapper>
 

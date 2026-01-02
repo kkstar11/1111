@@ -1,7 +1,6 @@
 package com.xianyu.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class Item {
 
@@ -17,10 +16,6 @@ public class Item {
     private String contactWay;
     private String location;
     private String imageUrls;
-    private Integer viewCount;
-    private Integer likeCount;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 
     public Long getId() {
         return id;
@@ -118,36 +113,5 @@ public class Item {
         this.imageUrls = imageUrls;
     }
 
-    public Integer getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
-    }
-
-    public Integer getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
 }
 

@@ -11,8 +11,6 @@ public class Order {
     private Long sellerId;
     private BigDecimal itemPrice;
     private Integer status;
-    private LocalDateTime createTime;
-    private LocalDateTime finishTime;
 
     public Long getId() {
         return id;
@@ -62,19 +60,4 @@ public class Order {
         this.status = status;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(LocalDateTime finishTime) {
-        this.finishTime = finishTime;
-    }
 }

@@ -43,8 +43,6 @@ public class ItemServiceImpl implements ItemService {
         item.setContactWay(dto.getContactWay());
         item.setLocation(dto.getLocation());
         item.setImageUrls(dto.getImageUrls());
-        item.setViewCount(0);
-        item.setLikeCount(0);
         itemMapper.insert(item);
         return itemMapper.findById(item.getId()).map(this::toVO).orElseGet(() -> toVO(item));
     }
